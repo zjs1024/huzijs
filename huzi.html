@@ -1,0 +1,446 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>huzi_1.1.js</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/docs.min.css">
+  <style type="text/css">
+   form label {
+    font-size: 24px;
+    font-weight: normal;
+   }
+    li.rightside {
+    float:right !important;
+    line-height:30px;
+  }
+  li.rightside img {height:20px;}
+  li.rightside > a {
+  	background-color: #ffffff;
+	border-width: 0px;
+	border-bottom-color: transparent;
+	color:#59287c;
+  }
+  li.rightside > a:hover {
+	outline: 0;
+	background-color: #ffffff;
+	border-width: 0px;
+	border-bottom-color: transparent;
+	cursor: pointer;
+	color:#57c0e9
+	}
+  .img-thumbnail{width:120px;height:240px;} 
+  dt {color:#0095dd;}
+  dd {margin-left:20px;}    
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="js/huzi.js"></script>
+  </head>
+<body>
+<form id="myForm" method="post" class="form-horizontal">
+
+<div class="container">
+
+<h2><a href="js/Huzi.js">Huzi.js</a> jQuery Plugin</h2>
+<p>Huzi.js is a javascript templating tool, it is similar to Angular.js, Handlebars.js and Mustache.js, but it is different from these templating tools, it is mainly using string based templates instead of html tag based.</p>
+<h4>Getting started</h4>
+<p>Huzi has two main variable data and template, data is a JSON object; There are two ways to define a Huzi template, use string as a template or create a html file as a template.</p> 
+
+<ul class="nav nav-tabs" role="tablist" id="dashboardTab">
+  <li role="presentation" class="active"><a id="demo0_js0-tab" href="#demo0_js0" data-toggle="tab" role="tab" aria-expanded="false">To Use</a></li>
+  <li role="presentation"><a id="demo0_html-tab" href="#demo0_html" data-toggle="tab" role="tab" aria-expanded="false">File Template </a></li>
+  <li role="presentation"><a id="demo0_js1-tab" href="#demo0_js1" data-toggle="tab" role="tab" aria-expanded="false">String Template</a></li>
+</ul>
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="demo0_js0">  
+      <div class="highlight">
+        <pre>
+             <code class="language-js" data-lang="js"><mark>Passing JSON data and string template as variables</mark>
+              var products = [
+              {
+                  "id": "bb_070915_001", 
+                  "images": [ {url:"img/handbags/bb_070915_01.jpg", title:"p1"},
+                              {url:"img/handbags/bb_070915_02.jpg", title:"p2"},
+                              {url:"img/handbags/bb_070915_03.jpg", title:"p3"}],
+                  "name": "Canvas check hobo bag", 
+                  "price": "795",
+                  "desc": "Medium canvas check hobo bag",
+                  "date": "07/09/2015"
+              }, ...]
+
+              $("#container").huzi({
+                       data: products,
+                       template: temp 
+              });
+             </code>
+        </pre>
+      </div>
+  </div>
+  
+      <div role="tabpanel" class="tab-pane" id="demo0_html">          
+      <div class="highlight">
+        <pre>
+          <code class="language-html" data-lang="html"><mark>You can save the template in a html file and load it using ajax calls</mark> <br/>/*** temp.html ***/ <br/>
+                  &lt;div&gt;   
+                  {{if this.a > 0}}
+                     &lt;span&gt; a &gt; 0 &lt;/span&gt;
+                  {{else}}
+                     &lt;span&gt; a &lt; 0 &lt;/span&gt;
+                  {{endif}}
+                  &lt;/div&gt;     
+
+                  /*** load the html template using ajax calls ***/
+                  $.get("template/shared/demo1.html", function(temp){
+                     $("#container").huzi({
+                       data: products,
+                       template: temp 
+                     });
+                  }) 
+          </code>
+        </pre>
+      </div>
+    </div>
+      <div role="tabpanel" class="tab-pane" id="demo0_js1">  
+      <div class="highlight">
+        <pre>
+             <code class="language-js" data-lang="js"><mark>You can also define a string as a template</mark><br/>
+                var temp = [
+                     " &lt;div&gt; ",  
+                     "{{if this.a > 0}}",
+                     "&lt;span&gt; a &gt; 0 &lt;/span&gt;",
+                     "{{else}}",
+                     "&lt;span&gt; a &lt; 0 &lt;/span&gt;",
+                     "{{endif}}",
+                     "&lt;/div&gt;"].join("")
+                $("#container").huzi({
+                       data: products,
+                       template: temp 
+                });
+           });</code>
+        </pre>
+      </div>
+        </div>
+  </div>
+
+<h4>Comparison <small>if-elsif-else-endif</small></h4>
+  <p><mark>{{if condition}} ... {{elsif condition}} ... {{else}} ... {{endif}}</mark> where <mark>condition</mark>
+     is the javascript expression like <mark> this.a == 'AAA' & this.b == 'BBB'</mark>.  <mark>this</mark> is used to binding the scope to local variables
+   </p>
+  <div id="condition_test_div" class="bs-example"></div>
+  <div class="highlight">
+  <pre>
+     <code class="language-js" data-lang="js">var page = {a:"AAA",b:"BBB",c:"CCC",d:"DDD","condition1":true,
+            arr:[{ a1:"a1", a2:"a2", a3:"a3"},
+              {b1:"b1",b2:"b2",c2:"c2"},
+              {c1:"c1",c2:"c2",c3:"c3"}]
+			}<br/>var condition_str =  ["{{if this.a=='AAA' && this.b=='BBB'}}",
+	           "&lt;span&gt; A and B &lt;/span&gt;",
+	           "{{if this.c != 'CCC'}}",
+	             "&lt;span&gt; It is not C &lt;/span&gt;",
+	           "{{elsif this.d =='DDD'}} ",
+	             "&lt;span&gt; C and D &lt;/span&gt;",
+	           "{{endif}}",
+	          "{{else}}",
+	           "&lt;span&gt; Not A and B&lt;/span&gt;",
+	          "{{endif}}"];
+
+            $(function(){
+      		   $("#condition_test_div").huzi({
+      		   	   data:page,
+      		   	   template: condition_str.join("")
+              })
+		});</code>
+  </pre>
+</div>
+
+<h4>Loop</h4>
+<p>Repeatly create elements between <code>{{repeat data_array}}</code>  and <code>{{endrepeat}}</code>.
+   if no arguments followed "repeat": <code>{{repeat}}</code>, <code>this.data</code> will be used as default data for the loop. To define a local variable in the loop, you can using <mark>|var </mark> in <mark>repeat</mark> like: <mark>{{repeat images|var index = 0|var i=1}}</mark>, they can be called by using <mark>{{expret index}}</mark> to return a value or <mark>{{exp index= index+1}}</mark> to just run the expression. Note: you <b class="text-danger">can't </b> call declared variable directly like <mark style="text-decoration: line-through;">{{index}}</mark>.
+</p>
+<div id="loop_test_div" class="bs-example"></div>
+  <ul class="nav nav-tabs" role="tablist" id="dashboardTab">
+	<li role="presentation" class="active"><a id="demo2_html-tab" href="#demo2_html" data-toggle="tab" role="tab" aria-expanded="false">Html</a></li>
+	<li role="presentation"><a id="demo2_js-tab" href="#demo2_js" data-toggle="tab" role="tab" aria-expanded="false">JS</a></li>
+</ul>
+<div class="tab-content">
+    	<div role="tabpanel" class="tab-pane active" id="demo2_html">  
+			<div class="highlight">
+			  <pre>
+			    <code class="language-js" data-lang="js"><mark>file template</mark>
+              {{if this.arr != null}}
+                  &lt;table class="table"&gt;
+                    &lt;tr&gt;&lt;th&gt;Col one&lt;th&gt;&lt;th&gt;Col two&lt;th&gt;&lt;th&gt;Col three&lt;th&gt;&lt;tr&gt;
+                    {{if this.condition1}}
+                      {{repeat arr|var index = 0|var rindex=3}}
+                         &lt;tr&gt;
+                          {{if index == 1}}
+                               &lt;td class="mark"&gt;A index = {{index}}&lt;/td&gt;
+                          {{else}}
+                               &lt;td&gt;{{c1}} - {{a}}&lt;/td&gt;
+                          {{endif}}
+                          &lt;td&gt;{{c2}}&lt;/td&gt;
+                          {{if rindex == 1}}
+                          &lt;td class="mark"&gt;rindex={{expret rindex}}&lt;/td&gt;
+                          {{else}}
+                          &lt;td&gt;{{c3}}&lt;/td&gt;
+                          {{endif}}
+                        &lt;/tr&gt;
+                          {{exp index = index + 1}}
+                          {{exp rindex = rindex - 1}}
+                      {{endrepeat}}
+                    {{else}}
+                      {{repeat arr}}
+                      &lt;tr&gt;
+                       &lt;td&gt;{{c1}}&lt;/td&gt;
+                       &lt;td&gt;{{c2}}&lt;/td&gt;
+                       &lt;td&gt;{{c3}}&lt;/td&gt;
+                     &lt;/tr&gt;
+                     {{endrepeat}}
+                    {{endif}}
+                    &lt;tr&gt;&lt;td&gt;{{a}}&lt;/td&gt;&lt;td&gt;{{b}}&lt;/td&gt;&lt;td&gt;{{c}}&lt;/td&gt;&lt;/tr&gt;
+                  &lt;/table&gt;
+              {{else}}
+                  &lt;h2&gt;no data&lt;/h2&gt;
+              {{endif}}</code>
+			  </pre>
+		  </div>
+	</div>
+
+    	<div role="tabpanel" class="tab-pane" id="demo2_js">  
+			<div class="highlight">
+			  <pre>
+			     <code class="language-js" data-lang="js"><span>//loading from html template.<mark>$.get can't used to load local file</mark></span><br/>$.get("template/shared/demo2.html", function(html){
+			       $("#loop_test_div").huzi({
+   	   data:page,
+   	   template: html
+   })
+	});</code>
+			  </pre>
+			</div>
+        </div>
+ </div>
+
+<h4>Embeded loop and conditions</h4>
+<div id="products_div" class="bs-example"></div>
+<ul class="nav nav-tabs" role="tablist" id="productsTab">
+  <li role="presentation" class="active"><a id="demo5_html-tab" href="#demo5_html" data-toggle="tab" role="tab" aria-expanded="false">JS</a></li>
+</ul>
+<div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="demo5_html">  
+        <div class="highlight">
+          <pre>
+            <code class="language-js" data-lang="js">
+          var imgurl = "http://placehold.it/150x150";
+      var imgurl0 = "http://placehold.it/120x120";
+      var products = [
+            {
+                "id": "bb_070915_001",
+                "brand": "Burberry",
+                "type" : "handbag", 
+                "image1" : imgurl0,
+                "images": [ {url: imgurl, title:"p1"}, {url:imgurl,title:"p2"},{url:imgurl,title:"p3"}],
+                "name": "Canvas check hobo bag", 
+                "price": "795",
+                "color": ["red","blue","white"],
+                "quantity" : "5",       
+                "desc": "Medium canvas check hobo bag",
+                "date": "07/09/2015"
+            }
+            ...
+        ];
+
+          var products_temp = [
+              '&lt;table class="table"&gt;',
+                '&lt;tr&gt;&lt;th style="width:400px;"&gt;&lt;th&gt;&lt;th&gt;Name&lt;th&gt;&lt;th&gt;Description&lt;th&gt;&lt;th&gt;Price&lt;th&gt;&lt;/tr&gt;',
+                '{{repeat}}',
+                 '&lt;tr&gt;',
+                   '&lt;td&gt;{{repeat images}}&lt;img src="{{url}}" class="img-thumbnail" alt="{{title}}"/&gt; {{endrepeat}}&lt;/td&gt;',
+                   '&lt;td&gt;{{name}}&lt;/td&gt;&lt;td&gt;{{desc}}&lt;/td&gt;&lt;td class="{{if parseInt(this.price) > 600}}mark{{endif}}"&lt;/td&gt;',
+                '&lt;/tr&gt;',
+                '{{endrepeat}}',
+              '&lt;/table&gt;'].join("");
+            $("#products_div").huzi({
+                 data:products,
+                 template: products_temp,
+                 bindingComplete: function(e){
+                  console.log(this);
+                 }
+             });
+            </code>
+          <pre>
+        </div>
+      </div>
+</div> 
+<h4>Demo Project</h4> 
+<div>
+  Here is a <a href="product-list.html">demo project</a>. using Huzi for products list and product detials page.
+</div>
+<h4>Reference</h4>
+<div>
+   <p> To call a variable or function in Huzi plugin is the same as in Bootstrap plugin, like:
+       <mark>$("#somediv").data("huzi").rebind(data)</mark></p> 
+   <dl>
+     <dt>appendable</dt>
+     <dd>when doing rebinding, you can define appendable in options to true, thus the value will be appended to the 
+         jQuery element, instead of replace it. The default value is false.</dd>
+   </dl>
+   <dl>
+     <dt>bind</dt>
+     <dd>you can call the bind function to force binding with current data and template.</dd>
+   </dl>
+   <dl>
+     <dt>data</dt>
+     <dd>data is the data object saved in JSON format.</dd>
+   </dl>
+   <dl>
+     <dt>rebind(data)</dt>
+     <dd>you can call the rebind function to force a data binding with new data.</dd>
+   </dl>
+   <dl>
+     <dt>template</dt>
+     <dd>template varible used to save the template string.</dd>
+   </dl>
+</div>
+  </form>
+</div>
+
+<script>
+var page = {a:"AAA",b:"BBB",c:"CCC",d:"DDD", "condition1":true,
+            arr:[{ c1:"a1", c2:"a2", c3:"a3"},
+              {c1:"b1",c2:"b2",c3:"c2"},
+              {c1:"c1",c2:"c2",c3:"c3"}]
+			}
+var condition_str =  ["{{if this.a=='AAA' && this.b=='BBB'}}",
+                   "<span> A and B </span><br/>",
+				           "{{if this.c == 'CCC'}}",
+				             "<span> It is not C </span><br/>",
+				           "{{elsif this.d =='DDD'}} ",
+				             "<span> C and D </span><br/>",
+				           "{{endif}}",
+			          "{{else}}",
+			           "<span> Not A and B</span><br/>",
+			          "{{endif}}"];
+var table_str = [
+    '{{if this.arr != null}}',  
+    '<table class="table">',
+      '<tr><th>Col one</th><th>Col two</th><th>Col three</th></tr>',
+      '{{if this.condition1}}',
+	      '{{repeat arr|var index = 0|var rindex= 3}}',
+	         '<tr>',
+	          '{{if index ==1}}',
+	               '<td class="mark">index = {{expret index}}</td>',
+	          '{{else}}',
+	               '<td>{{c1}} - {{a}}</td>',
+	          '{{endif}}',
+	          '<td>{{c2}}</td>',
+	          '{{if rindex == 1}}',
+	          '<td class="mark">rindex = {{expret rindex}}</td>',
+	          '{{else}}',
+	          '<td>{{c3}}</td>',
+	          '{{endif}}',
+	        '</tr>',
+           '{{exp index= index + 1}}',
+           '{{exp rindex = rindex -1}}',
+	      '{{endrepeat}}',
+      '{{else}}',
+	      '{{repeat arr}}',
+	      '<tr>',
+	       '<td>{{c1}}</td>',
+	       '<td>{{c2}}</td>',
+	       '<td>{{c3}}</td>',
+	     '</tr>',
+	     '{{endrepeat}}',
+      '{{endif}}',
+      '<tr><td>{{a}}</td><td>{{b}}</td><td>{{c}}</td></tr>',
+    '</table>',
+    '{{else}}',
+    '<h2>no data</h2>',
+    '{{endif}}'];
+ var imgurl = "http://placehold.it/150x150";
+      var imgurl0 = "http://placehold.it/120x120";
+      var products = [
+            {
+                "id": "bb_070915_001",
+                "brand": "Burberry",
+                "type" : "handbag", 
+                "image1" : imgurl0,
+                "images": [ {url: imgurl, title:"p1"}, {url:imgurl,title:"p2"},{url:imgurl,title:"p3"}],
+                "name": "Canvas check hobo bag", 
+                "price": "795",
+                "color": ["red","blue","white"],
+                "quantity" : "5",       
+                "desc": "Medium canvas check hobo bag",
+                "date": "07/09/2015"
+            }, 
+            {
+                "id": "bb_070915_002", 
+                "brand": "Burberry",
+                "type" : "handbag",
+                "name": "Burberry small handbag",
+                "image1" : imgurl0,
+               "images": [ {url:imgurl,title:"p4"}, {url:imgurl,title:"p5"},{url:imgurl,title:"p6"}],
+                "price": "550",
+                "salePrice": "400",
+                "color": ["red","blue","white"],        
+                "quantity" : "1",       
+                "desc": "Burberry small house check and leather crossbody bag",
+                "date": "07/09/2015"
+          },
+              {
+                "id": "bb_070915_003",
+                "brand": "Burberry",         
+                "type" : "shoes",
+                "name": "Burberry small handbag",
+                "image1" : imgurl0,
+                "images": [ {url:imgurl,title:"p4"}, {url:imgurl,title:"p5"},{url:imgurl,title:"p6"}],
+                "price": "550",
+                "color": ["red","blue","white"],  
+                "size" : ["7", "7.5", "8","9","10"],    
+                "quantity" : "10",       
+                "desc": "Burberry leahther shoes",
+                "date": "07/09/2015"
+          }
+        ];
+var products_temp = [
+    '<table class="table">',
+      '<tr><th style="width:500px;"></th><th>Name</th><th>Description</th><th>Price</th></tr>',
+      '{{repeat}}',
+           '<tr>',
+             '<td>{{repeat images}}<img src="{{url}}" style="width:150px;height:150px;" class="img-thumbnail" alt="{{title}}"/> {{endrepeat}}</td>',
+             '<td>{{name}}</td><td>{{desc}}</td><td class="{{if parseInt(this.price) > 600}}mark{{endif}}">{{price}}</td>',
+          '</tr>',
+      '{{endrepeat}}',
+    '</table>'].join("");
+
+
+
+
+$(function(){
+   $("#products_div").huzi({
+       data:products,
+       template: products_temp,
+       bindingComplete: function(e){
+        console.log(this);
+       }
+   });
+
+   $("#condition_test_div").huzi({
+   	   data:page,
+   	   template: condition_str.join("")
+    })
+  // var emptydata = {};
+  $("#loop_test_div").huzi({
+   	   data:page,
+   	   template: table_str.join("")
+   })
+  
+});
+</script>
+</body>
+</html>
+
+
