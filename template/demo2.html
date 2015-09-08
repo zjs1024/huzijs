@@ -1,0 +1,33 @@
+{{if this.arr != null}}
+    <table class="table">
+      <tr><th>Col one</th><th>Col two</th><th>Col three</th></tr>
+      {{if this.condition1}}
+        {{for arr}}
+           <tr>
+            {{if this.c1=="a1"}}
+                 <td class="mark">A one</td>
+            {{else}}
+                 <td>{{c1}} - {{a}}</td>
+            {{endif}}
+            <td>{{c2}}</td>
+            {{if this.c3 != "c3"}}
+            <td>{{c3}}</td>
+            {{else}}
+            <td class="mark">{{c3}}</td>
+            {{endif}}
+          </tr>
+        {{endfor}}
+      {{else}}
+        {{for arr}}
+        <tr>
+         <td>{{c1}}</td>
+         <td>{{c2}}</td>
+         <td>{{c3}}</td>
+       </tr>
+       {{endfor}}
+      {{endif}}
+      <tr><td>{{a}}</td><td>{{b}}</td><td>{{c}}</td></tr>
+    </table>
+{{else}}
+    <h2>no data</h2>
+{{endif}}

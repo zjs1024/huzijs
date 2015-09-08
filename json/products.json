@@ -1,0 +1,18 @@
+products: [
+    {
+        "id": "bb_070915_001", 
+        "images": ["img/burberry/bb_070915_01.jpg", "img/burberry/bb_070915_02.jpg","img/burberry/bb_070915_03.jpg"],
+        "name": "Canvas check hobo bag", 
+        "price": "$795",
+        "desc": "Medium canvas check hobo bag",
+        "date": "07/09/2015"
+    }, 
+    {
+        "id": "bb_070915_002", 
+        "name": "Burberry small handbag",
+        "images": ["img/burberry/bb_070915_04.jpg", "img/burberry/bb_070915_05.jpg","img/burberry/bb_070915_06.jpg"],
+        "price": "$550",
+        "desc": "Burberry small house check and leather crossbody bag",
+        "date": "07/09/2015"
+	}
+]
