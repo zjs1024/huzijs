@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
+        <meta charset="utf-8">
+        <title>Bootply snippet - Bootstrap Product list (Volume)</title>
+        <meta name="generator" content="Bootply" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="description" content="Bootstrap The simple volume list example snippet for Bootstrap." />
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  
+        <!--[if lt IE 9]>
+          <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <link rel="apple-touch-icon" href="/bootstrap/img/apple-touch-icon.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/bootstrap/img/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/bootstrap/img/apple-touch-icon-114x114.png">
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+        <!-- CSS code from Bootply.com editor -->
+        
+        <style type="text/css">
+            .col-md-12 {
+            width: 960px;
+            margin: auto;
+            padding: 0px;
+          }
+          .volume-panel {
+            margin-top: 20px; /* Only use for bootply preview */
+            border-radius: 0px;
+          }
+          .volume-panel .panel-body {
+            
+          }
+          .volume-panel .panel-body .alert {
+            border-radius: 0px;
+            border: 0px;
+          }
+          .volumelist {
+            width: 295px;
+            height: 150px;
+            border: 1px solid #efefef;
+            float: left;
+            padding: 9px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            position: relative;
+          }
+          .volumelist:hover {
+            border: 1px solid #ccc;
+            cursor: pointer;
+          }
+          .volumelist .provider-icon {
+            position: absolute;
+            right: 0px;
+            top: 10px;
+            width: 30px;
+            height: 30px;
+            background: #efefef;
+            color: blue;
+          }
+          .volumelist span:first-child {
+            float: left;
+            margin-right: 9px;
+          }
+          .volumelist span:last-child {
+            float: left;
+          }
+          .volumelist span > small {
+            font-size: 10px;
+            line-height: 10px;
+            color: #ccc;
+          }
+          .price-div {padding: 5px;}
+          .price-div .sale-price {
+               color: red;
+               display: inline-block;
+               margin-left: 5px;
+               color: #82b548;
+          }
+          .price-div .origin {
+               text-decoration: line-through;
+               color: lightgray;
+               display: inline-block;
+          }
+          .volumedetails {
+               position: relative;
+               display: none;
+          }
+          .volumedetails .photoslist {
+               display: inline-block;
+               width: 300px;
+          }
+          .volumedetails .details-info {
+               display: inline-block;
+               vertical-align: top;
+               margin-top: 10px;
+               margin-left: 20px;
+          }
+          .volumedetails .close-button {
+               position: absolute;
+               top: 15px;
+               right: 15px;
+               text-align: right;
+          }
+          .volumedetails .detailsButtons {
+               position: absolute;
+               bottom: 50px;
+               right: 200px;
+           }
+          .volumedetails .description {
+               width: 220px;
+               word-wrap: break-word;
+               padding-top:10px;
+          }
+          div#preload { display: none; }
+        </style>
+    </head>
+    
+    <!-- HTML code from Bootply.com editor -->
+    
+    <body  >
+    <div class="container">
+      <div class="row">
+        <form id="searchForm" class="form-condensed form-inline">
+            <div class="panel panel-default">  
+                <div class="panel-heading">
+                  <div class="form-group">
+                     <input type="text" class="typeahead form-control input-sm searchCriteria" name="searchCriteria" id="searchCriteria" value="" /> 
+                      <button type="button" id="searchButton" data-loading-text="Loading..." class="btn btn-success" autocomplete="off">
+                         <span class="glyphicon glyphicon-search"></span>
+                         Search
+                     </button>
+                  </div>
+                </div>
+            </div>  
+        </form>
+      </div> 
+      <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-default volume-panel">
+            <div class="panel-heading">
+              Products
+            </div>
+                <div id="products_list_div" class="panel-body">
+                    
+                </div><!-- Panel body close -->
+                <div id="product_details_div" class="panel-body volumedetails">
+                    
+                </div><!-- Panel body close -->
+             </div><!-- Panel close -->
+          </div>
+      </div> <!--Row close-->
+     
+    </div> <!--Container close-->
+   <div id="preload">
+      <img src="http://placehold.it/80x80" width="1" height="1" alt="Photo" />
+   </div>
+        
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="js/huzi.js"></script>
+  <script type='text/javascript'>
+      var imgurl = "http://placehold.it/300x300";
+      var imgurl0 = "http://placehold.it/120x120";
+      var products = [
+            {
+                "id": "bb_070915_001",
+                "brand": "Burberry",
+                "type" : "handbag", 
+                "image1" : imgurl0,
+                "images": [ {url: imgurl, title:"p1"}, {url:imgurl,title:"p2"},{url:imgurl,title:"p3"}],
+                "name": "Canvas check hobo bag", 
+                "price": "795",
+                "color": ["red","blue","white"],
+                "quantity" : "5",       
+                "desc": "Medium canvas check hobo bag",
+                "date": "07/09/2015"
+            }, 
+            {
+                "id": "bb_070915_002", 
+                "brand": "Burberry",
+                "type" : "handbag",
+                "name": "Burberry small handbag",
+                "image1" : imgurl0,
+               "images": [ {url:imgurl,title:"p4"}, {url:imgurl,title:"p5"},{url:imgurl,title:"p6"}],
+                "price": "550",
+                "salePrice": "400",
+                "color": ["red","blue","white"],        
+                "quantity" : "1",       
+                "desc": "Burberry small house check and leather crossbody bag",
+                "date": "07/09/2015"
+          },
+              {
+                "id": "bb_070915_003",
+                "brand": "Burberry",         
+                "type" : "shoes",
+                "name": "Burberry small handbag",
+                "image1" : imgurl0,
+                "images": [ {url:imgurl,title:"p4"}, {url:imgurl,title:"p5"},{url:imgurl,title:"p6"}],
+                "price": "550",
+                "color": ["red","blue","white"],  
+                "size" : ["7", "7.5", "8","9","10"],    
+                "quantity" : "10",       
+                "desc": "Burberry leahther shoes",
+                "date": "07/09/2015"
+          },
+          {
+                "id": "co_070915_004",
+                "brand": "Coach",
+                "type" : "handbag", 
+                "image1" : imgurl0,
+                "images": [ {url:imgurl, title:"p1"}, {url:imgurl,title:"p2"},{url:imgurl,title:"p3"}],
+                "name": "Canvas check hobo bag", 
+                "price": "795",
+                "color": ["red","blue","white"],
+                "quantity" : "4",       
+                "desc": "Medium canvas check hobo bag",
+                "date": "07/09/2015"
+            }, 
+            {
+                "id": "co_070915_005", 
+                "brand": "Coach",
+                "type" : "handbag",
+                "name": "Coach small handbag",
+                "image1" : imgurl0,
+                "images": [ {url:imgurl,title:"p4"}, {url:imgurl,title:"p5"},{url:imgurl,title:"p6"}],
+                "price": "550",
+                "color": ["red","blue","white"],        
+                 "quantity" : "5",               
+                "desc": "Coach small house check and leather crossbody bag",
+                "date": "07/09/2015"
+          },
+              {
+                "id": "bb_070915_006",
+                "brand": "Coach",         
+                "type" : "shoes",
+                "name": "Coach shoes",
+                "image1" : imgurl0,
+                "images": [ {url:imgurl,title:"p4"}, {url:imgurl,title:"p5"},{url:imgurl,title:"p6"}],
+                "price": "750",
+                "salePrice":"520",
+                "color": ["red","blue","white"], 
+                "size" : ["7", "7.5", "8","9","10"],    
+                "quantity" : "10",       
+                "desc": "Coach leather shoes",
+                "date": "07/09/2015"
+          }
+        ];
+
+        var products_temp = [
+                  '{{repeat}}',
+                      '<div class="volumelist" data-id="{{id}}">',
+                          '<span>',
+                            '<img class="thumbnail" src="{{image1}}" >',
+                          '</span>',
+                          '<span>',
+                            '<div>{{name}}</div>',
+                            '<small>{{brand}}</small>',
+                             '<div class="price-div">',
+                            '{{if this.salePrice != null}}',
+                            '<div class="origin">',
+                               '<p>${{price}}</p>',
+                            '</div>',
+                            '<div class="sale-price">',
+                               '<p>${{salePrice}}</p>',
+                            '</div>',
+                            '{{else}}',
+                               '<span>${{price}}</span>',
+                            '{{endif}}',
+                            '</div>',
+                            '<small>{{quantity}} available</small>',
+                          '</span>',
+                        '<span class="clearfix"></span>',
+                      '</div>',
+                    '{{endrepeat}}'
+        ].join("");
+
+        var product_details_temp = [
+              '<div id="product-details-photos" class="carousel slide photoslist" data-ride="carousel">',
+                  '<!-- Indicators -->',
+                  '<ol class="carousel-indicators">',
+                    '{{repeat images|var index=0 | var pp= 1}}',
+                    '<li data-target="#product-details-photos" data-slide-to="{{expret index}}"',
+                    '{{if index == 0}} class="active"{{endif}}>{{expret pp}}</li>',
+                    '{{exp index = index + 1}}',
+                    '{{endrepeat}}',
+                  '</ol>',
+
+                  '<!-- Wrapper for slides -->',
+                  '<div class="carousel-inner" role="listbox">',
+                    '{{repeat images|var index=0}}',
+                    '<div class="item {{if index == 0 }} active {{endif}}">',
+                      '<img src="{{url}}">',
+                      '<div class="carousel-caption">',
+                     '</div>',
+                    '</div>  ',
+                    '{{exp index = index + 1}}',
+                    '{{endrepeat}}',
+                   '<a class="left carousel-control" href="#product-details-photos" role="button" data-slide="prev">',
+                    '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>',
+                    '<span class="sr-only">Previous</span>',
+                  '</a>',
+                  '<a class="right carousel-control" href="#product-details-photos" role="button" data-slide="next">',
+                    '<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>',
+                    '<span class="sr-only">Next</span>',
+                  '</a>',
+                '</div>',
+            '</div>',
+            '<div class="details-info">',               
+                '<span>',
+                    '<div>{{name}}</div>',
+                    '<small>{{brand}}</small>',
+                     '<div class="price-div">',
+                    '{{if this.salePrice != null}}',
+                    '<div class="origin">',
+                       '<p>${{price}}</p>',
+                    '</div>',
+                    '<div class="sale-price">',
+                       '<p>${{salePrice}}</p>',
+                    '</div>',
+                    '{{else}}',
+                       '<span>${{price}}</span>',
+                    '{{endif}}',
+                    '</div>',
+                    '<small>{{quantity}} available</small>',
+                    '<div class="description">{{desc}}</div>',
+                  '</span>',                
+                '<span class="clearfix"></span>',
+          '</div>',
+          '<div class="detailsButtons"><button class="btn btn-success pull-right">',
+                  '<span class="pull-right glyphicon glyphicon-shopping-cart" aria-hidden="true" ></span>',
+                  'Buy</button></div>',
+          '<div class="close-button" onclick="closeDetails()">',
+          '<span class="pull-right glyphicon glyphicon-remove" aria-hidden="true" ></span>',
+          '</div>'
+        ].join("");
+        var getData = function (){
+            var result = [];
+            var v = $("#searchCriteria").val();
+            if(!$.isBlank(v)){
+              results = $.grep(products, function(e){
+                          if(e.name.toLowerCase().indexOf(v.toLowerCase()) != -1) return e;
+                        });
+            }else{
+              results = products;
+            }
+            return results;
+        };
+        var getDataById = function (id){
+            var result = $.grep(products, function(e){
+                          if(e.id === id) return e;
+                        });
+            
+            return (result.length > 0 ? result[0] : null);
+        };
+        var showResults = function(){
+            if($("#products_list_div").data("huzi") != null){
+                   $("#products_list_div").data("huzi").rebind(getData());
+                 }else{
+                   $("#products_list_div").huzi({
+                      data:products,
+                      template: products_temp
+                   })
+            }
+        }
+        var showDetails = function(pid){
+          var product =getDataById(pid);
+
+           if($("#product_details_div").data("huzi") != null){
+                   $("#product_details_div").data("huzi").rebind(product);
+           }else{
+                   $("#product_details_div").huzi({
+                      data:product,
+                      template: product_details_temp
+                   })
+           }
+           $("#product_details_div").show();
+           $("#products_list_div").hide();
+        }
+        var closeDetails = function(){
+           $("#product_details_div").hide();
+           $("#products_list_div").show();
+        }
+       $(document).ready(function() {
+            $.isBlank = function(obj){
+              return(!obj || $.trim(obj) === "");
+            };
+            $('#searchButton').on('click', function(){
+                 showResults();
+            });
+            $("#searchCriteria").keyup(function(){
+                 showResults();
+            });
+            
+            $(document).on("click",".volumelist", function(){
+                var pid = $(this).data("id");
+                showDetails(pid);
+            });
+        });
+        </script>
+    </body>
+</html>
