@@ -148,18 +148,11 @@
        for(var i=0; i< conditions.length; i++){
           var constr=conditions[i]; 
           
-          if(constr.indexOf("that.") != -1){
-              if(eval(constr)){
-                  retstr = parts[i];
-                  break;
-              }
-          }else{
-              if(function(constr){
-                   return eval(constr);
-              }.call(this.bindingData,constr)){
-                  retstr = parts[i];
-                  break;
-              }
+          if(function(constr){
+              return eval(constr);
+          }.call(this.bindingData,constr)){
+             retstr = parts[i];
+             break;
           }
         }
        return prestr + retstr.trim()+ str.substring(str.indexOf("{{endif}}")+9);
@@ -284,17 +277,32 @@
             var n=m.map(function(x) { return x.match(/[\w\.\[\]]+/)[0]; });
 
               for(var i=0; i< m.length; i++){
-                if(m[i].startsWith("{{expret ")){
+                if(m[i].indexOf("{{expret ") == 0){
                     var ret = eval(m[i].substring(9,m[i].length-2));
                     str = str.replace(m[i],ret);
-                }else if(m[i].startsWith("{{exp ")){
+                }else if(m[i].indexOf("{{exp ") == 0){
                     eval(m[i].substring(6,m[i].length-2));
                     str = str.replace(m[i],"");
+                }else if(m[i].indexOf("{{fun ") == 0){
+                    var fn= m[i].substring(6,m[i].length-2).split(" ");
+                    for(var j=1; j<fn.length;j++){
+                      if(fn[j].indexOf(".") != -1){  //attribute of child object
+                            var o= fn[j].substring(0, fn[j].indexOf("."));
+                            var a = fn[j].substring(fn[j].indexOf(".")+1);
+                            fn[j] = eval("dic[o]."+ a);
+                      }else{
+                        if(dic[fn[j]] != null){    
+                                fn[j] = dic[fn[j]]
+                            }
+                      }
+                    }
+                    var ret = eval(fn[0] + "(" + fn.slice(1).join(",") + ")"); 
+                    str = str.replace(m[i],ret);
                 }else{
                     if(n[i].indexOf(".") != -1){  //attribute of child object
                               var o= n[i].substring(0, n[i].indexOf("."));
                               var a = n[i].substring(n[i].indexOf(".")+1);
-                              str=str.replace(m[i],dic[o][a]); 
+                              str=str.replace(m[i],eval("dic[o]."+ a));
                     }else if(n[i].indexOf("[") != -1){  // it is an array
                         var o=n[i].substring(0,n[i].indexOf("["));
                         var inx = n[i].substring(n[i].indexOf("[")+1, n[i].indexOf("]"));
