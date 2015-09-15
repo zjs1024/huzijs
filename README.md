@@ -135,8 +135,9 @@
       </div>
   </li>
 </ul>
-
-<h4>Reference</h4>
+# Demo
+  <p> A small search engine created with huzi.js: <code>product-list.html</code></p>
+# Reference
 <div>
    <p> To call a variable or function in Huzi plugin is the same as in Bootstrap plugin, like:
        <mark>$("#somediv").data("huzi").rebind(data)</mark></p> 
