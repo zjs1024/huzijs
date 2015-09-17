@@ -300,9 +300,13 @@
                     str = str.replace(m[i],ret);
                 }else{
                     if(n[i].indexOf(".") != -1){  //attribute of child object
-                              var o= n[i].substring(0, n[i].indexOf("."));
+                      if(n[i].indexOf("that.")==0){
+                        str=str.replace(m[i],eval(n[i]));
+                      }else{
+                            var o= n[i].substring(0, n[i].indexOf("."));
                               var a = n[i].substring(n[i].indexOf(".")+1);
                               str=str.replace(m[i],eval("dic[o]."+ a));
+                      }
                     }else if(n[i].indexOf("[") != -1){  // it is an array
                         var o=n[i].substring(0,n[i].indexOf("["));
                         var inx = n[i].substring(n[i].indexOf("[")+1, n[i].indexOf("]"));
@@ -320,7 +324,151 @@
                 }
         }
         return str;
-      }
+      },
+               getFormData: function(){  
+             this.validate();
+             if(this.isValid){
+               var inputArr = this.$element.find(":input").not(':input[type=button], :input[type=submit], :input[type=reset]');
+                for(var i=0; i<inputArr.length;i++){
+                 var item,attr;
+                 var $input = $(inputArr[i]);
+                 var parentObj = $input.data("parent");
+                 var itemid = inputArr[i].id;
+                 if(!$.isBlank(parentObj)){
+                   item = this.data[parentObj];
+                 }else{
+                   item = this.data;
+                 }
+               attr = itemid;
+                 
+                 if(!$.isBlank(itemid)){ 
+                     if(inputArr[i].type == 'checkbox'){
+                       inputArr[i].checked ? item[attr] = true : item[attr] = false;
+                     }else if(inputArr[i].type == 'radio'){
+                         if(inputArr[i].checked) item[attr] = $(inputArr[i]).val();                         
+                     }else{  
+                       if ($.isBlank($input.val())){
+                         $input.val("");
+                       }else{
+                         item[attr] = $input.val();
+                       }                 
+                     } 
+                     if( $input.attr("type") == 'number'){
+                         item[attr] = parseInt($input.val());
+                     }
+                   }
+                   
+               }
+             }
+           },
+         setFormValues: function(){
+               var inputArr = this.$element.find(":input");
+               for(var i=0; i<inputArr.length;i++){
+               var item, attr;
+               var $input = $(inputArr[i]);
+               var parentObj = $input.data("parent");
+                 var itemid = inputArr[i].id;
+                 
+                 if(!$.isBlank(parentObj)){
+                   item=this.data[parentObj];
+                 }else{
+                   item = this.data;
+                 }
+                 attr= itemid;
+                 if(item[attr] != null){              
+                   if(inputArr[i].type == 'checkbox'){
+                     if(item[attr] == "1" || item[attr] == "Y" || item[attr] == true){
+                       inputArr[i].checked =true;
+                     }else{
+                       inputArr[i].checked = false;  
+                     }
+                   }else if(inputArr[i].type == 'radio'){
+                       if($input.val() == item[attr]) inputArr[i].checked = true;
+                       else inputArr[i].checked = false;
+                   }else{
+                     $input.val(item[attr]);
+                   }
+                 }
+               }
+         },  
+         setFormValues_old: function(){
+           var inputArr = this.$element.find(":input");
+           for(var i=0; i<inputArr.length;i++){
+             if(this.data[inputArr[i].id] != null){              
+               if(inputArr[i].type == 'checkbox'){
+                 if(this.data[inputArr[i].id] == "1" || this.data[inputArr[i].id] == "Y" || this.data[inputArr[i].id] == true){
+                   inputArr[i].checked =true;
+                 }else{
+                   inputArr[i].checked = false;  
+                 }
+               }else if(inputArr[i].type == 'radio'){
+                   if(inputArr[i].value == this.data[inputArr[i].id]) inputArr[i].checked = true;
+                   else inputArr[i].checked = false;
+               }else{
+                 $(inputArr[i]).val(this.data[inputArr[i].id]);
+               }
+             }
+           }
+         },
+         // <input id="slno" data-om-type="email" required>
+         validate: function(){
+           that = this;
+           that.isValid = true;
+           that.$element.find(":input:visible[required]").each(function(){
+             if(that.isblank($(this).val())){
+               $(this).closest(".form-group").addClass("has-error");
+               that.isValid = false;
+             }else{$(this).closest(".form-group").removeClass("has-error");}
+           });
+           that.$element.find(":input:visible[data-om-type]").each(function(){
+             if(!that.isblank($(this).val()) &&  $(this).data("om-type")!=null ){            
+               if($(this).data("om-type") == "email"){
+                 that.hightlightError($(this), !that.isValidEmail($(this).val()));
+               }else if($(this).data("om-type") == "zip"){
+                 that.hightlightError($(this), !that.isValidZip($(this).val()));               
+               }else if($(this).data("om-type") == "range"){
+                   var min = parseInt($(this).attr("min"));
+                   var max = parseInt($(this).attr("max"));
+                   var num = parseInt($(this).val());
+                   that.hightlightError($(this), (isNaN(num) || !(num >= min && num <= max)));
+               }else if($(this).data("om-type") == "date"){
+                   that.hightlightError($(this), !that.isValidDate($(this).val()));
+               }
+             }
+           })
+         },
+         hightlightError: function($ele, hasError){
+             if(hasError){
+                 $ele.closest(".form-group").addClass("has-error");
+                 this.isValid = false;
+                 if($ele.data("om-error")!= null){
+                     $ele.after("<span class='text-danger'>*"+ $ele.data("om-error") + "</span>");
+                 }
+             }else{
+                 $ele.closest(".form-group").removeClass("has-error");
+                 $ele.siblings(".text-danger").remove();
+             }
+         },
+         isblank : function(obj){
+              return(!obj || $.trim(obj) === "");
+         },
+         isValidEmail : function(email) {
+             var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+             return emailReg.test( email );
+           },
+         isValidZip  : function(zip) {
+           var zipReg = /^\d{5}(-\d{4})?$/;
+           return zipReg.test(zip);
+         },
+         isValidDate : function(str) {    
+              var parms = str.split(/[\.\-\/]/);
+              var yyyy = parseInt(parms[2],10);
+              var dd   = parseInt(parms[1],10);
+              var mm   = parseInt(parms[0],10);
+              var date = new Date(yyyy,mm-1,dd,0,0,0,0);
+              return mm === (date.getMonth()+1) && dd === date.getDate() && yyyy === date.getFullYear();
+        }
+
   }
 
   function Plugin(option) {
