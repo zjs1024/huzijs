@@ -79,10 +79,10 @@
       </div>
   </li>
     <li><h4><code>{{if }} ... {{elsif  }} ... {{else}} ... {{endif}}</code> to do the condictional logic</h4>
-      <p><code>this</code> in the logic pointing to the current scope, <code>that</code> point to the parent object</p>
+      <p><code>this</code> in the logic pointing to the current scope, <code>that</code> point to current jQuery element, like: <code>{{that.data}}</code> equals <code> $("#element").data("huzi").data</code> </p>
       <div class="highlight highlight-js">
           <pre>
-              {{if this.price > 100}}
+              {{if <b style="color:red">this</b>.price > 100}}
                  &lt;span class="mark" &gt; {{price}} &lt;/span&gt;
               {{else}}
                  &lt;span &gt; {{price}} &lt;/span&gt;
