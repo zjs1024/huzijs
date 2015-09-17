@@ -6,6 +6,8 @@
    <li>support JSON data binding </li>
    <li>support contrinal logic and loops; also support muliti-level embedded loops and logic</li>
    <li>support object oriented object naming conventions binding</li>
+   <li>support two ways data binding between form and JSON data</li>
+   <li>support form data validation during form binding</li>
 </ul>
 # JSON data and template
 <ul>
@@ -135,6 +137,9 @@
       </div>
   </li>
 </ul>
+# Form Data binding and validation
+  <p>Function <code>getFormData and setFormData</code> can be used menually binding data between form elements and JSON object</p>
+  
 # Demo
   <p> A small search engine created with huzi.js: <code>product-list.html</code></p>
 # Reference
