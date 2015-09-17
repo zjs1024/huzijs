@@ -391,25 +391,6 @@
                  }
                }
          },  
-         setFormValues_old: function(){
-           var inputArr = this.$element.find(":input");
-           for(var i=0; i<inputArr.length;i++){
-             if(this.data[inputArr[i].id] != null){              
-               if(inputArr[i].type == 'checkbox'){
-                 if(this.data[inputArr[i].id] == "1" || this.data[inputArr[i].id] == "Y" || this.data[inputArr[i].id] == true){
-                   inputArr[i].checked =true;
-                 }else{
-                   inputArr[i].checked = false;  
-                 }
-               }else if(inputArr[i].type == 'radio'){
-                   if(inputArr[i].value == this.data[inputArr[i].id]) inputArr[i].checked = true;
-                   else inputArr[i].checked = false;
-               }else{
-                 $(inputArr[i]).val(this.data[inputArr[i].id]);
-               }
-             }
-           }
-         },
          // <input id="slno" data-om-type="email" required>
          validate: function(){
            that = this;
