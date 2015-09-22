@@ -34,15 +34,6 @@
               this.bind();
         }else { this.bind();}
     }, 
-   /* reset: function(options){
-    	this.data = options.data;
-        this.bindingData = options.data;
-        this.type = options.type;
-        this.template = options.template;
-        this.temp = options.template;
-        this.appendable = options.appendable != null ? options.appendable : false;
-        this.bind();
-    },*/
     bind : function(){
       if(this.data != null){
         while(this.template.indexOf("{{repeat") != -1 || this.template.indexOf("{{if") != -1){
@@ -268,7 +259,8 @@
       return str;
     },
     replaceHuzi : function(template, dic){
-        var str = String(template);
+      var that = this;
+      var str = String(template);
       //  str = this.ifCondition(str);
        // var m=str.match(/{{\s*[\w\.]+\s*}}/g);
         var m=str.match(/{{\s*(.*?)\s*}}/g);
@@ -286,13 +278,20 @@
                 }else if(m[i].indexOf("{{fun ") == 0){
                     var fn= m[i].substring(6,m[i].length-2).split(" ");
                     for(var j=1; j<fn.length;j++){
-                      if(fn[j].indexOf(".") != -1){  //attribute of child object
-                            var o= fn[j].substring(0, fn[j].indexOf("."));
-                            var a = fn[j].substring(fn[j].indexOf(".")+1);
-                            fn[j] = eval("dic[o]."+ a);
+                      if(fn[j][0] === "'" || fn[j][0] === '"'){
+
+                      }else if(fn[j].indexOf(".") != -1){  //attribute of child object
+                            
+                            if(fn[j].indexOf("that.")==0){
+                              //fn[j]=eval(fn[j]);
+                            }else{
+                               var o= fn[j].substring(0, fn[j].indexOf("."));
+                               var a = fn[j].substring(fn[j].indexOf(".")+1);
+                               fn[j] = "dic['"+o+"'']."+ a;
+                            }
                       }else{
                         if(dic[fn[j]] != null){    
-                                fn[j] = dic[fn[j]]
+                                fn[j] = "dic['"+fn[j]+"']";
                             }
                       }
                     }
@@ -325,130 +324,136 @@
         }
         return str;
       },
-               getFormData: function(){  
-             this.validate();
-             if(this.isValid){
-               var inputArr = this.$element.find(":input").not(':input[type=button], :input[type=submit], :input[type=reset]');
-                for(var i=0; i<inputArr.length;i++){
-                 var item,attr;
-                 var $input = $(inputArr[i]);
-                 var parentObj = $input.data("parent");
-                 var itemid = inputArr[i].id;
-                 if(!$.isBlank(parentObj)){
-                   item = this.data[parentObj];
-                 }else{
-                   item = this.data;
-                 }
-               attr = itemid;
-                 
-                 if(!$.isBlank(itemid)){ 
-                     if(inputArr[i].type == 'checkbox'){
-                       inputArr[i].checked ? item[attr] = true : item[attr] = false;
-                     }else if(inputArr[i].type == 'radio'){
-                         if(inputArr[i].checked) item[attr] = $(inputArr[i]).val();                         
-                     }else{  
-                       if ($.isBlank($input.val())){
-                         $input.val("");
-                       }else{
-                         item[attr] = $input.val();
-                       }                 
-                     } 
-                     if( $input.attr("type") == 'number'){
-                         item[attr] = parseInt($input.val());
-                     }
-                   }
-                   
-               }
-             }
-           },
-         setFormValues: function(){
-               var inputArr = this.$element.find(":input");
-               for(var i=0; i<inputArr.length;i++){
-               var item, attr;
+      getFormData: function(){  
+           this.validate();
+           if(this.isValid){
+             var inputArr = this.$element.find(":input").not(':input[type=button], :input[type=submit], :input[type=reset]');
+              for(var i=0; i<inputArr.length;i++){
+               var item,attr;
                var $input = $(inputArr[i]);
                var parentObj = $input.data("parent");
-                 var itemid = inputArr[i].id;
-                 
-                 if(!$.isBlank(parentObj)){
-                   item=this.data[parentObj];
-                 }else{
-                   item = this.data;
-                 }
-                 attr= itemid;
-                 if(item[attr] != null){              
+               var fun = $input.data("getfun");
+               var itemid = inputArr[i].id;
+               if(!$.isBlank(parentObj)){
+                 item = this.data[parentObj];
+               }else{
+                 item = this.data;
+               }
+             attr = itemid;
+             var val= $input.val();  
+               if(!$.isBlank(itemid)){
+                   if(!$.isBlank(fun)){
+                      val = eval(fun+"('"+val+"')"); 
+                   } 
                    if(inputArr[i].type == 'checkbox'){
-                     if(item[attr] == "1" || item[attr] == "Y" || item[attr] == true){
-                       inputArr[i].checked =true;
-                     }else{
-                       inputArr[i].checked = false;  
-                     }
+                     inputArr[i].checked ? item[attr] = true : item[attr] = false;
                    }else if(inputArr[i].type == 'radio'){
-                       if($input.val() == item[attr]) inputArr[i].checked = true;
-                       else inputArr[i].checked = false;
-                   }else{
-                     $input.val(item[attr]);
-                   }
-                 }
-               }
-         },  
-         // <input id="slno" data-om-type="email" required>
-         validate: function(){
-           that = this;
-           that.isValid = true;
-           that.$element.find(":input:visible[required]").each(function(){
-             if(that.isblank($(this).val())){
-               $(this).closest(".form-group").addClass("has-error");
-               that.isValid = false;
-             }else{$(this).closest(".form-group").removeClass("has-error");}
-           });
-           that.$element.find(":input:visible[data-om-type]").each(function(){
-             if(!that.isblank($(this).val()) &&  $(this).data("om-type")!=null ){            
-               if($(this).data("om-type") == "email"){
-                 that.hightlightError($(this), !that.isValidEmail($(this).val()));
-               }else if($(this).data("om-type") == "zip"){
-                 that.hightlightError($(this), !that.isValidZip($(this).val()));               
-               }else if($(this).data("om-type") == "range"){
-                   var min = parseInt($(this).attr("min"));
-                   var max = parseInt($(this).attr("max"));
-                   var num = parseInt($(this).val());
-                   that.hightlightError($(this), (isNaN(num) || !(num >= min && num <= max)));
-               }else if($(this).data("om-type") == "date"){
-                   that.hightlightError($(this), !that.isValidDate($(this).val()));
-               }
+                       if(inputArr[i].checked) item[attr] = val;                         
+                   }else{  
+                     
+                       item[attr] = val;
+                                     
+                   } 
+                  }
+                 
              }
-           })
+           }
          },
-         hightlightError: function($ele, hasError){
-             if(hasError){
-                 $ele.closest(".form-group").addClass("has-error");
-                 this.isValid = false;
-                 if($ele.data("om-error")!= null){
-                     $ele.after("<span class='text-danger'>*"+ $ele.data("om-error") + "</span>");
-                 }
+       setFormData: function(){
+          var inputArr = this.$element.find(":input");
+           for(var i=0; i<inputArr.length;i++){
+           var item, attr;
+           var $input = $(inputArr[i]);
+           var parentObj = $input.data("parent");
+           var fun = $input.data("setfun");
+             var itemid = inputArr[i].id;
+             
+             if(!$.isBlank(parentObj)){
+               item=this.data[parentObj];
              }else{
-                 $ele.closest(".form-group").removeClass("has-error");
-                 $ele.siblings(".text-danger").remove();
+               item = this.data;
              }
+             attr= itemid;
+             var val= item[attr];
+             
+             if(val != null){ 
+               if(!$.isBlank(fun)){
+                   val = eval(fun+"('"+val+"')"); 
+               }
+               if(inputArr[i].type == 'checkbox'){
+                 if(val == "1" || val == "Y" || val == true){
+                   inputArr[i].checked =true;
+                 }else{
+                   inputArr[i].checked = false;  
+                 }
+               }else if(inputArr[i].type == 'radio'){
+                   if($input.val() == val) inputArr[i].checked = true;
+                   else inputArr[i].checked = false;
+               }else{
+                 $input.val(val);
+               }
+               
+             }
+           }
+       },  
+       // <input id="slno" data-om-type="email" required>
+       validate: function(){
+         that = this;
+         that.isValid = true;
+         that.$element.find(":input:visible[required]").each(function(){
+           if(that.isblank($(this).val())){
+             $(this).closest(".form-group").addClass("has-error");
+             that.isValid = false;
+           }else{$(this).closest(".form-group").removeClass("has-error");}
+         });
+         that.$element.find(":input:visible[data-om-type]").each(function(){
+           if(!that.isblank($(this).val()) &&  $(this).data("om-type")!=null ){            
+             if($(this).data("om-type") == "email"){
+               that.hightlightError($(this), !that.isValidEmail($(this).val()));
+             }else if($(this).data("om-type") == "zip"){
+               that.hightlightError($(this), !that.isValidZip($(this).val()));               
+             }else if($(this).data("om-type") == "range"){
+                 var min = parseInt($(this).attr("min"));
+                 var max = parseInt($(this).attr("max"));
+                 var num = parseInt($(this).val());
+                 that.hightlightError($(this), (isNaN(num) || !(num >= min && num <= max)));
+             }else if($(this).data("om-type") == "date"){
+                 that.hightlightError($(this), !that.isValidDate($(this).val()));
+             }
+           }
+         })
+       },
+       hightlightError: function($ele, hasError){
+           if(hasError){
+               $ele.closest(".form-group").addClass("has-error");
+               this.isValid = false;
+               if($ele.data("om-error")!= null){
+                   $ele.after("<span class='text-danger'>*"+ $ele.data("om-error") + "</span>");
+               }
+           }else{
+               $ele.closest(".form-group").removeClass("has-error");
+               $ele.siblings(".text-danger").remove();
+           }
+       },
+       isblank : function(obj){
+            return(!obj || $.trim(obj) === "");
+       },
+       isValidEmail : function(email) {
+           var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+           return emailReg.test( email );
          },
-         isblank : function(obj){
-              return(!obj || $.trim(obj) === "");
-         },
-         isValidEmail : function(email) {
-             var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-             return emailReg.test( email );
-           },
-         isValidZip  : function(zip) {
-           var zipReg = /^\d{5}(-\d{4})?$/;
-           return zipReg.test(zip);
-         },
-         isValidDate : function(str) {    
-              var parms = str.split(/[\.\-\/]/);
-              var yyyy = parseInt(parms[2],10);
-              var dd   = parseInt(parms[1],10);
-              var mm   = parseInt(parms[0],10);
-              var date = new Date(yyyy,mm-1,dd,0,0,0,0);
-              return mm === (date.getMonth()+1) && dd === date.getDate() && yyyy === date.getFullYear();
-        }
+       isValidZip  : function(zip) {
+         var zipReg = /^\d{5}(-\d{4})?$/;
+         return zipReg.test(zip);
+       },
+       isValidDate : function(str) {    
+            var parms = str.split(/[\.\-\/]/);
+            var yyyy = parseInt(parms[2],10);
+            var dd   = parseInt(parms[1],10);
+            var mm   = parseInt(parms[0],10);
+            var date = new Date(yyyy,mm-1,dd,0,0,0,0);
+            return mm === (date.getMonth()+1) && dd === date.getDate() && yyyy === date.getFullYear();
+      }
 
   }
 
