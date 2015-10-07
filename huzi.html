@@ -8,9 +8,8 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/docs.min.css">
   <style type="text/css">
-   form label {
-    font-size: 24px;
-    font-weight: normal;
+   .control-label {
+    padding-top:0px !important;
    }
     li.rightside {
     float:right !important;
@@ -33,7 +32,8 @@
 	}
   .img-thumbnail{width:120px;height:240px;} 
   dt {color:#0095dd;}
-  dd {margin-left:20px;}    
+  dd {margin-left:20px;}   
+
   </style>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -48,7 +48,7 @@
 <h2><a href="js/Huzi.js">Huzi.js</a> jQuery Plugin</h2>
 <p>Huzi.js is a javascript templating tool, it is similar to Angular.js, Handlebars.js and Mustache.js, but it is different from these templating tools, it is mainly using string based templates instead of html tag based.</p>
 <h4>Getting started</h4>
-<p>Huzi has two main variable data and template, data is a JSON object; There are two ways to define a Huzi template, use string as a template or create a html file as a template.</p> 
+<p>Huzi has two key variables: data and template, data is a JSON object; template is a string object. There are two ways to define a Huzi template, use string as a template or create a html file as a template.</p> 
 
 <ul class="nav nav-tabs" role="tablist" id="dashboardTab">
   <li role="presentation" class="active"><a id="demo0_js0-tab" href="#demo0_js0" data-toggle="tab" role="tab" aria-expanded="false">To Use</a></li>
@@ -274,7 +274,114 @@
           <pre>
         </div>
       </div>
-</div> 
+</div>
+<h4> Form binding </h4>
+ <p>Form binding can be used binding the data between object and form elements as long as the id are the same.</p> 
+    <code>$("#form_huzi_test_div").oms_huzi("setFormValues")</code> <p>binding the data of page object to the form inputs.</p> <code>$("#form_huzi_test_div").oms_huzi("getFormData")</code>
+    <p> binding the form inputs to the page object, doing the validation beform binding, currently "required","email","zip" and "range" valiation are supported. just declare <code>required </code> or <code> data-om-type:'email' </code> in the input tag.</p>
+ </p> 
+ <div id="form_huzi_test_div" class="bs-example"></div>
+  <ul class="nav nav-tabs" role="tablist" id="dashboardTab">
+  <li role="presentation" class="active"><a id="demo3_html-tab" href="#demo5_html" data-toggle="tab" role="tab" aria-expanded="false">Html</a></li>
+  <li role="presentation"><a id="demo5_js-tab" href="#demo5_js" data-toggle="tab" role="tab" aria-expanded="false">JS</a></li>
+</ul>
+<div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="demo5_html">  
+      <div class="highlight">
+        <pre>
+          <code class="language-html" data-lang="html">var form_str=['&lt;div class="container"&gt;&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;label for="a" class="control-label col-md-5"&gt;*First Name&lt;/label&gt;',
+        '&lt;div class="col-md-5"&gt;',
+          '&lt;input type="text" class="form-control input-sm" id="firstName" value="{{firstName}}" required /&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;',
+    '&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;label for="a" class="control-label col-md-5"&gt;*Last Name&lt;/label&gt;',
+        '&lt;div class="col-md-5"&gt;',
+          '&lt;input type="text" class="form-control input-sm" id="lastName" value="{{lastName}}" required /&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;',  
+    '&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;label for="a" class="control-label col-md-5"&gt;*Street&lt;/label&gt;',
+        '&lt;div class="col-md-5"&gt;',
+          '&lt;input type="text" class="form-control input-sm" id="street" data-parent="address" value="{{address.street}}" required /&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;', 
+    '&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;label for="a" class="control-label col-md-5"&gt;*City&lt;/label&gt;',
+        '&lt;div class="col-md-5"&gt;',
+          '&lt;input type="text" class="form-control input-sm" id="city" value="{{address.city}}" data-parent="address" required /&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;', 
+    '&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;label for="a" class="control-label col-md-5"&gt;*State&lt;/label&gt;',
+        '&lt;div class="col-md-5"&gt;',
+          '&lt;select class="form-control input-sm" id="state" value="{{address.state}}" data-parent="address" required&gt;&lt;/select&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;',   
+    '&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;label for="c" class="control-label col-md-5"&gt;Zip&lt;/label&gt;',
+        '&lt;div class="col-md-5"&gt;',
+          '&lt;input type="text" class="form-control input-sm" id="zip" value="{{address.zip}}" data-parent="address" data-type="zip" /&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;',
+ '&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;label for="b" class="control-label col-md-5"&gt;*Email&lt;/label&gt;',
+        '&lt;div class="col-md-5"&gt;',
+          '&lt;input type="text" class="form-control input-sm" id="email" value="{{email}}" required data-type="email"/&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;',
+  '&lt;div class= "row"&gt; ',
+    '&lt;div class="form-group"&gt;',
+     '&lt;label for="c" class="control-label col-md-5"&gt;Salary&lt;/label&gt;',
+     '&lt;div class="col-md-5"&gt;',
+       '&lt;input type="text" class="form-control input-sm" id="salary" value="{{fun stringToMoney salary}}" data-fun="formatMoney"/&gt;',
+     '&lt;/div&gt;',
+   '&lt;/div&gt;',
+ '&lt;/div&gt;',
+    '&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;div class="col-md-6 pull-right"&gt;',
+          '&lt;button id="form_huzi_submit" type="button" class="btn btn-default"&gt;Submit&lt;/button&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;&lt;/div&gt;'];</code>
+        </pre>
+      </div>
+  </div>
+
+      <div role="tabpanel" class="tab-pane" id="demo5_js">  
+      <div class="highlight">
+        <pre>
+           <code class="language-js" data-lang="js">var contact = { firstName:"Kobe",lastName:"Bryant",
+                address: {street:"120 1st st.", city:"Los Angeles", state:"CA", zip:"10022"},
+                email:"kb@lakers.com",
+                salary: 20000000, atCity:true
+              }
+             
+             $("#form_huzi_test_div").huzi({
+                 data:contact,
+                 template: form_str.join("")
+            })
+            </code>
+        </pre>
+      </div>
+        </div>
+ </div> 
 <h4>Demo Project</h4> 
 <div>
   Here is a <a href="product-list.html">demo project</a>. using Huzi for products list and product detials page.
@@ -416,10 +523,156 @@ var products_temp = [
       '{{endrepeat}}',
     '</table>'].join("");
 
+var form_str=['<div class="container"><div class= "row"><div class="col-md-6"> <div class= "row"> ',
+       '<div class="form-group">',
+        '<label for="a" class="control-label col-md-5">*First Name</label>',
+        '<div class="col-md-5">',
+          '<input type="text" class="form-control input-sm" id="firstName" value="{{firstName}}" required />',
+        '</div>',
+      '</div>',
+    '</div>',
+    '<div class= "row"> ',
+       '<div class="form-group">',
+        '<label for="a" class="control-label col-md-5">*Last Name</label>',
+        '<div class="col-md-5">',
+          '<input type="text" class="form-control input-sm" id="lastName" value="{{lastName}}" required />',
+        '</div>',
+      '</div>',
+    '</div>',  
+    '<div class= "row"> ',
+       '<div class="form-group">',
+        '<label for="a" class="control-label col-md-5">*Street</label>',
+        '<div class="col-md-5">',
+          '<input type="text" class="form-control input-sm" id="street" data-parent="address" value="{{address.street}}" required />',
+        '</div>',
+      '</div>',
+    '</div>', 
+    '<div class= "row"> ',
+       '<div class="form-group">',
+        '<label for="a" class="control-label col-md-5">*City</label>',
+        '<div class="col-md-5">',
+          '<input type="text" class="form-control input-sm" id="city" value="{{address.city}}" data-parent="address" required />',
+        '</div>',
+      '</div>',
+    '</div>', 
+    '<div class= "row"> ',
+       '<div class="form-group">',
+        '<label for="a" class="control-label col-md-5">*State</label>',
+        '<div class="col-md-5">',
+          '<select class="form-control input-sm" id="state" value="{{address.state}}" data-parent="address" required></select>',
+        '</div>',
+      '</div>',
+    '</div>',   
+    '<div class= "row"> ',
+       '<div class="form-group">',
+        '<label for="c" class="control-label col-md-5">Zip</label>',
+        '<div class="col-md-5">',
+          '<input type="text" class="form-control input-sm" id="zip" value="{{address.zip}}" data-parent="address" data-type="zip" />',
+        '</div>',
+      '</div>',
+    '</div>',
+ '<div class= "row"> ',
+       '<div class="form-group">',
+        '<label for="b" class="control-label col-md-5">*Email</label>',
+        '<div class="col-md-5">',
+          '<input type="text" class="form-control input-sm" id="email" value="{{email}}" required data-type="email"/>',
+        '</div>',
+      '</div>',
+    '</div>',
+  '<div class= "row"> ',
+    '<div class="form-group">',
+     '<label for="c" class="control-label col-md-5">Salary</label>',
+     '<div class="col-md-5">',
+       '<input type="text" class="form-control input-sm" id="salary" value="{{fun stringToMoney salary}}" data-setfun="stringToMoney" data-getfun="moneyToString"/>',
+     '</div>',
+   '</div></div>',
+  '<div class= "row"> ',
+    '<div class="form-group">',
+     '<label for="atCity" class="control-label col-md-5">Work at New York City?</label>',
+     '<div class="col-md-5">',
+       '<input type="checkbox" class="input-sm checkbox" id="atCity" value="" {{if this.atCity}}checked{{endif}}/>',
+     '</div>',
+   '</div>', 
+ '</div></div><div class="col-md-6"><span id="contactJSONDiv" style="word-wrap: break-word;">{{fun JSON.stringify that.data}}',
+      '</span></div></div>',
+    '<div class= "row"> ',
+       '<div class="form-group">',
+        '<div class="col-md-6 pull-right">',
+          '<button id="form_huzi_submit" type="button" class="btn btn-default">Submit</button>',
+          '<button id="form_huzi_readonly" type="button" class="btn btn-default" data-disabled="false">Read Only</button>',
+        '</div>',
+      '</div>',
+    '</div>'];
 
+var contact = { firstName:"Kobe",lastName:"Bryant",
+                address: {street:"120 1st st.", city:"Los Angeles", state:"CA", zip:"10022"},
+                email:"kb@lakers.com",
+                salary: 20000000,
+                atCity:true
+              }
+var states= {"AL": "Alabama","AK": "Alaska","AB": "Alberta","AS": "American Samoa","AZ": "Arizona","AR": "Arkansas",
+         "BC": "British Columbia","CA": "California","CO": "Colorado","CT": "Connecticut","DE": "Delaware",
+         "DC": "District of Columbia","FM": "Federated States of Micronesia","FL": "Florida","GA": "Georgia",
+         "GU": "Guam","HI": "Hawaii","ID": "Idaho","IL": "Illinois","IN": "Indiana","IA": "Iowa","KS": "Kansas",
+         "KY": "Kentucky","LA": "Louisiana","ME": "Maine","MB": "Manitoba","MH": "Marshall Islands","MD": "Maryland",
+         "MA": "Massachusetts","MI": "Michigan","MN": "Minnesota","MS": "Mississippi","MO": "Missouri","MT": "Montana",
+         "NE": "Nebraska","NV": "Nevada","NB": "New Brunswick","NH": "New Hampshire","NJ": "New Jersey",
+         "NM": "New Mexico","NY": "New York","NF": "Newfoundland","NC": "North Carolina","ND": "North Dakota",
+         "MP": "Northern Mariana Islands","NT": "Northwest Territories","NS": "Nova Scotia","OH": "Ohio",
+         "OK": "Oklahoma","ON": "Ontario","OR": "Oregon","PW": "Palau","PA": "Pennsylvania",
+         "PE": "Prince Edward Island","PR": "Puerto Rico","QC": "Quebec","RI": "Rhode Island","SK": "Saskatchewan",
+         "SC": "South Carolina","SD": "South Dakota","TN": "Tennessee","TX": "Texas","UT": "Utah","VT": "Vermont",
+         "VI": "Virgin Islands","VA": "Virginia","WA": "Washington","WV": "West Virginia","WI": "Wisconsin",
+         "WY": "Wyoming","YT": "Yukon Territory"
+       }
+Number.prototype.formatMoney = function(c, d, t){
+  var n = this, 
+    c = isNaN(c = Math.abs(c)) ? 2 : c, 
+    d = d == undefined ? "." : d, 
+    t = t == undefined ? "," : t, 
+    s = n < 0 ? "-" : "", 
+    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+    j = (j = i.length) > 3 ? j % 3 : 0;
+     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
+                                               
+var stringToMoney= function(str){ 
+  if($.isBlank(str)){ return "";} 
+  else {
+    return "$"+(parseFloat(str)).formatMoney();
+  }
+}
+var moneyToString= function(str){ 
+  if($.isBlank(str)){ return 0;} 
+  else {
+    return parseFloat(str.replace(/[$,]/g, ""));
+  }
+}
+var showContact = function(){
+   return $("#contactJSONDiv").text(JSON.stringify($("#form_huzi_test_div").data("huzi").data));
+}
+var createDropdown = function(ele, data, hasBlank,value){
+      var $ddl = $(ele);
+      $ddl.empty();
+      if(hasBlank)$ddl.append(new Option("",""));
+      if (Array.isArray(data)){
+          for( var i=0;i<data.length;i++){
+              $ddl.append( new Option(data[i],data[i]) );
+          }
 
+      }else{
+        $.each(data, function(val, text) {
+            $ddl.append( new Option(text,val) );
+        });
+      }
+
+      if( value != null && value !="") $ddl.val(value) ;
+}
 
 $(function(){
+   $.isBlank = function(obj){ 
+      return(!obj || $.trim(obj) === "" || $.trim(obj) === "undefined");
+   };
    $("#products_div").huzi({
        data:products,
        template: products_temp,
@@ -437,6 +690,29 @@ $(function(){
    	   data:page,
    	   template: table_str.join("")
    })
+  $("#form_huzi_test_div").huzi({
+       data:contact,
+       template: form_str.join(""),
+       bindingComplete: function(){
+           createDropdown("#state",states,true,contact.address.state);
+           $('#form_huzi_submit').on('click', function () {
+              $("#form_huzi_test_div").data("huzi").getFormData();
+              if($("#form_huzi_test_div").data("huzi").isValid){
+                contact = $("#form_huzi_test_div").data("huzi").data;
+                $("#form_huzi_test_div").data("huzi").rebind();
+              }   
+            });
+          $('#form_huzi_readonly').on('click', function () {
+              if($(this).text() === "Read Only"){
+               $("#form_huzi_test_div").data("huzi").readonlyForm();
+               $(this).text("Edit");
+              }else{
+               $("#form_huzi_test_div").data("huzi").enableForm();
+               $(this).text("Read Only");
+              }
+          })
+       }
+  })
   
 });
 </script>

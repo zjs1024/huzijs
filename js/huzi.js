@@ -35,6 +35,7 @@
         }else { this.bind();}
     }, 
     bind : function(){
+      this.buildCss();
       if(this.data != null){
         while(this.template.indexOf("{{repeat") != -1 || this.template.indexOf("{{if") != -1){
             this.template = this.run(this.template,this.data);
@@ -396,6 +397,40 @@
              }
            }
        },  
+       readonlyForm : function(){
+            this.$element.find(":input").not(":input[data-disabled='false']").each(function(){
+              if($(this).is(":checkbox")){
+                if($(this).next(".hz-readonly").length == 0){
+                  if($(this).prop("checked") == true){
+                    $(this).after("<span class='hz-readonly'>Yes</span>");
+                  }else{
+                    $(this).after("<span class='hz-readonly'>No</span>");
+                  }
+                }
+              }else if($(this).is("button")){
+
+              }else{
+                if($(this).next(".hz-readonly").length == 0){
+                    $(this).after("<span class='hz-readonly'>" + $(this).val() + "</span>");                  
+                }
+              }
+              $(this).hide();
+            })
+            this.$element.find("a").not("a[data-disabled='false']").each(function(){
+                 $(this).hide();
+            }) 
+          
+       },
+       enableForm : function(eleName, disableLink){
+            this.$element.find(":input").not(":input[data-disabled='true']").each(function(){
+               $(this).next(".hz-readonly").remove();
+               $(this).show();
+            })
+            this.$element.find("a").not("a[data-disabled='true']").each(function(){
+                 $(this).show();
+            }) 
+          
+       },
        // <input id="slno" data-om-type="email" required>
        validate: function(){
          that = this;
@@ -453,7 +488,16 @@
             var mm   = parseInt(parms[0],10);
             var date = new Date(yyyy,mm-1,dd,0,0,0,0);
             return mm === (date.getMonth()+1) && dd === date.getDate() && yyyy === date.getFullYear();
-      }
+      },
+      buildCss: function(){
+        if($("#hz_style").length == 0){
+          $("<style id='hz_style'>")
+          .prop("type", "text/css")
+          .html(this.huziCss.join(""))
+          .appendTo("head");
+        }      
+      },
+      huziCss: ['span.hz-readonly{ font-size:12px; font-weight: normal !important}']
 
   }
 
