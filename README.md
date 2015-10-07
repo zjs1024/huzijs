@@ -138,7 +138,7 @@
   </li>
 </ul>
 # Form Data binding and validation
-  <p>Function <code>getFormData and setFormData</code> can be used menually binding data between form elements and JSON object</p>
+  <p>Implemented two way data binding between javascript object and form elements, form validation and functions to toggle between read only and edit mode. Function <code>getFormData and setFormData</code> can be used menually binding data between form elements and JSON object. <code>readonlyForm and enableForm</code> can be used to toggle between read only and edit mode.</p>
   
 # Demo
   <p> A small search engine created with huzi.js: <code>product-list.html</code></p>
