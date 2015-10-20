@@ -148,6 +148,7 @@
     <li>To use as a template engine</h4>
       <div class="highlight highlight-js">
           <pre> 
+          var huzi = require("huzi");
           app.set('views', __dirname+'\\views');
           app.set('view engine', 'huzi');
           app.get('/', function(req, res) {
