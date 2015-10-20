@@ -8,6 +8,7 @@
    <li>support object oriented object naming conventions binding</li>
    <li>support two ways data binding between form and JSON data</li>
    <li>support form data validation during form binding</li>
+   <li>support node.js express template engine</li>
 </ul>
 # JSON data and template
 <ul>
@@ -142,6 +143,15 @@
   
 # Demo
   <p> A small search engine created with huzi.js: <code>product-list.html</code></p>
+# To use huzi module in Node.js as template engine
+<code>npm install huzi</code>
+<code>app.set('views', __dirname+'\\views');
+      app.set('view engine', 'huzi');
+          
+      app.get('/', function(req, res) {
+        res.render('hello',products);
+      });
+</code>
 # Reference
 <div>
    <p> To call a variable or function in Huzi plugin is the same as in Bootstrap plugin, like:
