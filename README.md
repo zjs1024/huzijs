@@ -143,15 +143,19 @@
   
 # Demo
   <p> A small search engine created with huzi.js: <code>product-list.html</code></p>
-# To use huzi module in Node.js as template engine
-<code>npm install huzi</code>
-<code>app.set('views', __dirname+'\\views');
-      app.set('view engine', 'huzi');
-          
-      app.get('/', function(req, res) {
-        res.render('hello',products);
-      });
-</code>
+# As a Node.js template engine
+<ul><li>Install in node: <code>npm install huzi</code></li>
+    <li>To use as a template engine</h4>
+      <div class="highlight highlight-js">
+          <pre> 
+          app.set('views', __dirname+'\\views');
+          app.set('view engine', 'huzi');
+          app.get('/', function(req, res) {
+             //hello.huzi in views
+             res.render('hello',products);
+          });
+         </pre>
+</div></li></ul>
 # Reference
 <div>
    <p> To call a variable or function in Huzi plugin is the same as in Bootstrap plugin, like:
