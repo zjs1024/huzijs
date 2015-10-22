@@ -4,7 +4,7 @@
 <ul>
    <li>support template as string or html files, make the project more orangizable.</li>
    <li>support JSON data binding </li>
-   <li>support contrinal logic and loops; also support muliti-level embedded loops and logic</li>
+   <li>support conditional logic and loops; also support muliti-level embedded loops and logic</li>
    <li>support object oriented object naming conventions binding</li>
    <li>support two ways data binding between form and JSON data</li>
    <li>support form data validation during form binding</li>
@@ -173,6 +173,18 @@
    <dl>
      <dt>data</dt>
      <dd>data is the data object saved in JSON format.</dd>
+   </dl>
+   <dl>
+     <dt>getFormData</dt>
+     <dd>binding form elements values within the DOM element to the data object, will do validation before get the values.
+        <mark>$("#somediv").data("huzi").getFormData(); //binding values to $("#somediv").data("huzi").data</mark>
+     </dd>
+   </dl>
+   <dl>
+     <dt>setFormData</dt>
+     <dd>binding data to the form elements within the DOM element.
+        <mark>$("#somediv").data("huzi").setFormData(); //binding $("#somediv").data("huzi").data to from elements</mark>
+     </dd>
    </dl>
    <dl>
      <dt>rebind(data)</dt>
