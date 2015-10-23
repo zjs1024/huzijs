@@ -1,6 +1,6 @@
 # huzi.js 
 # Summary
-<p>huzi.js is a jQuery plugin used for js templating development . </p>
+<p>huzi.js a template engine, can be used as a jQuery plugin or a node.js express template engine.</p>
 <ul>
    <li>support template as string or html files, make the project more orangizable.</li>
    <li>support JSON data binding </li>
@@ -9,6 +9,7 @@
    <li>support two ways data binding between form and JSON data</li>
    <li>support form data validation during form binding</li>
    <li>support node.js express template engine</li>
+   <li>some thoughts on js framework design using huzi.js: <a href="framework_design.md"> framework_design.md</a></li>
 </ul>
 # JSON data and template
 <ul>
