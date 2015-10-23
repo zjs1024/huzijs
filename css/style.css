@@ -1,0 +1,95 @@
+.col-md-12 {
+width: 960px;
+margin: auto;
+padding: 0px;
+}
+.volume-panel {
+margin-top: 20px; /* Only use for bootply preview */
+border-radius: 0px;
+}
+.volume-panel .panel-body {
+
+}
+.volume-panel .panel-body .alert {
+border-radius: 0px;
+border: 0px;
+}
+.volumelist {
+width: 295px;
+height: 150px;
+border: 1px solid #efefef;
+float: left;
+padding: 9px;
+margin-right: 10px;
+margin-bottom: 10px;
+position: relative;
+}
+.volumelist:hover {
+border: 1px solid #ccc;
+cursor: pointer;
+}
+.volumelist .provider-icon {
+position: absolute;
+right: 0px;
+top: 10px;
+width: 30px;
+height: 30px;
+background: #efefef;
+color: blue;
+}
+.volumelist span:first-child {
+float: left;
+margin-right: 9px;
+}
+.volumelist span:last-child {
+float: left;
+}
+.volumelist span > small {
+font-size: 10px;
+line-height: 10px;
+color: #ccc;
+}
+.price-div {padding: 5px;}
+.price-div .sale-price {
+   color: red;
+   display: inline-block;
+   margin-left: 5px;
+   color: #82b548;
+}
+.price-div .origin {
+   text-decoration: line-through;
+   color: lightgray;
+   display: inline-block;
+}
+.volumedetails {
+   position: relative;
+   display: none;
+}
+.volumedetails .photoslist {
+   display: inline-block;
+   width: 300px;
+}
+.volumedetails .details-info {
+   display: inline-block;
+   vertical-align: top;
+   margin-top: 10px;
+   margin-left: 20px;
+}
+.volumedetails .close-button {
+   position: absolute;
+   top: 15px;
+   right: 15px;
+   text-align: right;
+}
+.volumedetails .detailsButtons {
+   position: absolute;
+   bottom: 50px;
+   right: 200px;
+}
+.volumedetails .description {
+   width: 220px;
+   word-wrap: break-word;
+   padding-top:10px;
+}
+div#preload { display: none; }
+  
