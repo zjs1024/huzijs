@@ -28,7 +28,7 @@
 ********************************************************************************************
 </pre>
 # Following are framework structure:
-<p>More details check sample code products.html</p>
+<p>More details check sample code: <a href="products.html">products.html</a></p>
 <pre>
 &lt;!-- html templates contrainers -->
 &lt;div id="productsContainer"&gt;&lt;/div&gt;
