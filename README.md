@@ -141,8 +141,62 @@
   </li>
 </ul>
 # Form Data binding and validation
-  <p>Implemented two way data binding between javascript object and form elements, form validation and functions to toggle between read only and edit mode. Function <code>getFormData and setFormData</code> can be used menually binding data between form elements and JSON object. <code>readonlyForm and enableForm</code> can be used to toggle between read only and edit mode.</p>
-  
+  <p>Implemented two way data binding between object and form elements, form validation and functions to toggle between read only and edit mode. Function <code>getFormData and setFormData</code> can be used menually binding data between form elements and JSON object. <code>readonlyForm and enableForm</code> can be used to toggle between read only and edit mode.</p>
+<ul>
+   <li><h4>Two way biding between form elements and JSON data</h4>
+      <div class="highlight highlight-js">
+          <pre>
+                 var form_str=['&lt;div class="container"&gt;&lt;div class= "row"&gt;&lt;div class="col-md-6"&gt; &lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;label for="a" class="control-label col-md-5"&gt;*First Name&lt;/label&gt;',
+        '&lt;div class="col-md-5"&gt;',
+          '&lt;input type="text" class="form-control input-sm" <b>data-id</b>="firstName" value="{{firstName}}" required /&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;',
+       '&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;label for="a" class="control-label col-md-5"&gt;*Street&lt;/label&gt;',
+        '&lt;div class="col-md-5"&gt;',
+          '&lt;input type="text" class="form-control input-sm" id="street" <b>data-parent</b>="address" value="{{address.street}}" required /&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;', 
+    '&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;label for="c" class="control-label col-md-5"&gt;Zip&lt;/label&gt;',
+        '&lt;div class="col-md-5"&gt;',
+          '&lt;input type="text" class="form-control input-sm" id="zip" value="{{address.zip}}" data-parent="address" data-type="zip" /&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;',
+ '&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;label for="b" class="control-label col-md-5"&gt;*Email&lt;/label&gt;',
+        '&lt;div class="col-md-5"&gt;',
+          '&lt;input type="text" class="form-control input-sm" id="email" value="{{email}}" required data-type="email"/&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;',
+  '&lt;div class= "row"&gt; ',
+    '&lt;div class="form-group"&gt;',
+     '&lt;label for="c" class="control-label col-md-5"&gt;Salary&lt;/label&gt;',
+     '&lt;div class="col-md-5"&gt;',
+       '&lt;input type="text" class="form-control input-sm" id="salary" value="{{fun stringToMoney salary}}" data-setfun="stringToMoney" data-getfun="moneyToString"/&gt;',
+     '&lt;/div&gt;',
+   '&lt;/div&gt;&lt;/div&gt;',
+    '&lt;div class= "row"&gt; ',
+       '&lt;div class="form-group"&gt;',
+        '&lt;div class="col-md-6 pull-right"&gt;',
+          '&lt;button id="form_huzi_submit" type="button" class="btn btn-default"&gt;Submit&lt;/button&gt;',
+          '&lt;button id="form_huzi_readonly" type="button" class="btn btn-default" data-disabled="false"&gt;Read Only&lt;/button&gt;',
+        '&lt;/div&gt;',
+      '&lt;/div&gt;',
+    '&lt;/div&gt;'];
+          </pre>
+      </div>
+  </li>
+</ul>  
 # Demo
   <p> A small search engine created with huzi.js: <code>product-list.html</code></p>
 # As a Node.js template engine

@@ -334,7 +334,7 @@
                var $input = $(inputArr[i]);
                var parentObj = $input.data("parent");
                var fun = $input.data("getfun");
-               var itemid = inputArr[i].id;
+               var itemid = ($input.data("id") != null) ? $input.data("id") : inputArr[i].id;
                if(!$.isBlank(parentObj)){
                  item = this.data[parentObj];
                }else{
@@ -367,7 +367,7 @@
            var $input = $(inputArr[i]);
            var parentObj = $input.data("parent");
            var fun = $input.data("setfun");
-             var itemid = inputArr[i].id;
+          var itemid = ($input.data("id") != null) ? $input.data("id") : inputArr[i].id;
              
              if(!$.isBlank(parentObj)){
                item=this.data[parentObj];
