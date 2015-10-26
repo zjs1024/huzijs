@@ -143,7 +143,11 @@
 # Form Data binding and validation
   <p>Implemented two way data binding between object and form elements, form validation and functions to toggle between read only and edit mode. Function <code>getFormData and setFormData</code> can be used menually binding data between form elements and JSON object. <code>readonlyForm and enableForm</code> can be used to toggle between read only and edit mode.</p>
 <ul>
-   <li><h4>Two way biding between form elements and JSON data</h4>
+   <li><h4>Two way biding between form elements and JSON data. </h4>
+      <p>attibute<code>data-id</code> is the field name of the object, if it is null, it will element id as the field name;
+         <code>data-parent</code> pointing that it has a parent object; <code>required</code> and <code>data-type</code>
+         indicate the data field is required and the data type of the field; <code>data-getfun</code>and <code>data-setfun</code>
+         are the functions run on data binding.</p>
       <div class="highlight highlight-js">
           <pre>
                  var form_str=['&lt;div class="container"&gt;&lt;div class= "row"&gt;&lt;div class="col-md-6"&gt; &lt;div class= "row"&gt; ',
@@ -174,7 +178,7 @@
        '&lt;div class="form-group"&gt;',
         '&lt;label for="b" class="control-label col-md-5"&gt;*Email&lt;/label&gt;',
         '&lt;div class="col-md-5"&gt;',
-          '&lt;input type="text" class="form-control input-sm" id="email" value="{{email}}" required data-type="email"/&gt;',
+          '&lt;input type="text" class="form-control input-sm" id="email" value="{{email}}" <b>required</b> <b>data-type</b>="email"/&gt;',
         '&lt;/div&gt;',
       '&lt;/div&gt;',
     '&lt;/div&gt;',
@@ -193,6 +197,37 @@
         '&lt;/div&gt;',
       '&lt;/div&gt;',
     '&lt;/div&gt;'];
+   var contact = { firstName:"Kobe",lastName:"Bryant",
+                address: {street:"120 1st st.", city:"Los Angeles", state:"CA", zip:"10022"},
+                email:"kb@lakers.com",
+                salary: 20000000,
+                atCity:true
+              }
+   $("#form_huzi_test_div").huzi({
+       data:contact,      // binding contract data for form
+       template: form_str.join(""),
+       bindingComplete: function(){
+           createDropdown("#state",states,true,contact.address.state);
+           $('#form_huzi_submit').on('click', function () {
+              $huzi = $("#form_huzi_test_div").data("huzi");
+              $huzi.getFormData();   // binding form data to contract
+              if($huzi.isValid){
+                contact = $huzi.data;
+                $huzi.rebind();
+              }   
+            });
+          $('#form_huzi_readonly').on('click', function () {
+              $huzi = $("#form_huzi_test_div").data("huzi");
+              if($(this).text() === "Read Only"){
+               $huzi.readonlyForm();
+               $(this).text("Edit");
+              }else{
+               $huzi.enableForm();
+               $(this).text("Read Only");
+              }
+          })
+       }
+  })
           </pre>
       </div>
   </li>
