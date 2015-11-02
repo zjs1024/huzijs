@@ -1,10 +1,9 @@
 # huzi template and framework design
 <pre>
 *************************************************************************************
- Target: clean, efficient and light weight web app
+ Target: A light weight JS framework that implemented MVC, templates and JSON web services, well orgnized, easy to use and expend.
  Framework design:
-   1. use "_" as the base object of the app(it is not underscore.js, you can name whatever you want).
-      it will contains Model, Views, Controllers and other functions.
+   1. use "_" as the base object of the app(it is not underscore.js, I just think it is easy to type, you can name whatever you want). it will contains Model, Views, Controllers and other functions, all the following objects can be put in a seperate js file if it grows big.
       _.model : define all the data models and can be a init object when create new
       _.controllers: functions that handle the actions
       _.templates: templates dictionary contains all the templates
@@ -12,7 +11,7 @@
       _.data: where the data is saved.
 
       //other models
-      _.con : constants
+      _.gvar : constants and global variables
       _.utils: library of base functions, for common functions, add the directly to "_", 
                like the underscore library: _.isBlank, 
       _.profile: can be used for profile and security
@@ -49,7 +48,7 @@
           }  
 	};
 	_.profile = {firstName: "Jason",lastName: "Zhang"}
-	_.con ={
+	_.gvar ={
 	      imgurl : "http://placehold.it/300x300",
 	      imgurl0 : "http://placehold.it/120x120"
     }
