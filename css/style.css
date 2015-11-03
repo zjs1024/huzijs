@@ -92,4 +92,8 @@ color: #ccc;
    padding-top:10px;
 }
 div#preload { display: none; }
+#newProductForm {
+   width:500px;
+   margin-left: 30px;
+}
   

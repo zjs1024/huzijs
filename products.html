@@ -9,7 +9,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
       <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
       <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-      <link rel="stylesheet" type="text/css" href="./css/style.css">       
+      <link rel="stylesheet" type="text/css" href="./css/style.css">     
     </head>
   
     <body  >
@@ -33,12 +33,18 @@
           <div class="col-md-12">
             <div class="panel panel-default volume-panel">
             <div class="panel-heading">
-              Products
+              Products  <button type="button" id="newButton" data-loading-text="Loading..." class="btn btn-success btn-sm pull-right" autocomplete="off">
+                         <span class="glyphicon glyphicon-search"></span>
+                         New
+                     </button>
             </div>
-                <div id="productsContainer" class="panel-body">
+                <div id="productsContainer" class="panel-body" >
                     
                 </div><!-- Panel body close -->
                 <div id="productDetailsContainer" class="panel-body volumedetails">
+                    
+                </div><!-- Panel body close -->
+                <div id="newProductContainer" class="panel-body">
                     
                 </div><!-- Panel body close -->
              </div><!-- Panel close -->
@@ -56,17 +62,17 @@
 <script src="./js/huzi.js"></script>
 <script type='text/javascript'>
     var _ = { 
-      isBlank : function(obj){
-            return(!obj || $.trim(obj) === "" || $.trim(obj) === "undefined");
-        },
-          clone: function(obj) {
-            var newobj = {};
-            Object.getOwnPropertyNames(obj)
-                .forEach(function(element, index, array) {
-                    newobj[element] = obj[element];
-                });
-            return newobj;
-          }, 
+        isBlank : function(obj){
+              return(!obj || $.trim(obj) === "" || $.trim(obj) === "undefined");
+          },
+        clone: function(obj) {
+          var newobj = {};
+          Object.getOwnPropertyNames(obj)
+              .forEach(function(element, index, array) {
+                  newobj[element] = obj[element];
+              });
+          return newobj;
+        }, 
 
           /* profile and login info */  
         profile : {firstName: "Jason",lastName: "Zhang"},
@@ -74,12 +80,12 @@
         /* html5 localstorage, can be used to store templates, profile and other data in the client side */
         store : window.localStorage,
 
-      /* global valriable and constants */
-      gvar : {
-            templatesUrl:"templates/templates.huzi",
-            imgurl : "http://placehold.it/300x300",
-            imgurl0 : "http://placehold.it/120x120"
-      },
+        /* global valriable and constants */
+        gvar : {
+              templatesUrl:"templates/templates.huzi",
+              imgurl : "http://placehold.it/300x300",
+              imgurl0 : "http://placehold.it/120x120"
+        },
         controllers : {
           productList : function(callback){
              _.services.factory("getAllProducts", {
@@ -114,8 +120,31 @@
             })
           },
           productDetailsClose : function(){
-              $("#productDetailsContainer").hide();
-              $("#productsContainer").show();
+              _.paging.showPage("products");
+          },
+          newProduct : function(callback){
+             var $huzi = $("#newProductContainer").data("huzi");
+             if(_.isBlank($huzi)){
+              $("#newProductContainer").huzi({
+                   data: _.clone(_.models.product),
+                   template: _.templates["newProduct"],
+                   bindingComplete: callback
+                })
+             }else{
+                $huzi.rebind(_.models.product);
+             }    
+          },
+
+          saveNewProduct : function(callback){
+             var $huzi = $("#newProductContainer").data("huzi");
+             if(!_.isBlank($huzi)){
+               $huzi.getFormData();
+               if($huzi.isValid){
+                 _.data.products.push($huzi.data);
+               }else{
+                 return false;
+               }
+             }    
           },
 
           /* loading templates from server or localstorage to _.templates dictionary  */
@@ -156,11 +185,13 @@
           "id": "",
           "brand": "",
           "type" : "", 
-          "image1" : "",
-          "images": [],
+          "image1" : "http://placehold.it/120x120",
+          "images": [ {url: "http://placehold.it/300x300",title:"p4"},
+                      {url: "http://placehold.it/300x300",title:"p5"},
+                      {url: "http://placehold.it/300x300",title:"p6"}],
           "name": "", 
           "price": 0,
-          "color": [],
+          "color": ["red","blue","white"], 
           "quantity" : 5,       
           "desc": "",
           "date": new Date().usformat()
@@ -244,9 +275,26 @@
     }, 
       
       /* create utility library */
-      utils :  {
+    utils :  {
       urlbase: location.href.substring(0, location.href.lastIndexOf('/') + 1)             
-    } 
+    },
+
+    paging : {
+              pages : {
+                "products":"#productsContainer", 
+                "productDetails":"#productDetailsContainer",
+                "newProduct":"#newProductContainer"
+              },
+              showPage : function(page){
+                for(var key in _.paging.pages){
+                  if(page === key){
+                    $(_.paging.pages[key]).show();
+                  }else{
+                    $(_.paging.pages[key]).hide();
+                  }
+                }
+              }
+            } 
   }
 
   $(function() {
@@ -426,17 +474,99 @@
           '<div class="close-button" onclick="_.controllers.productDetailsClose()">',
           '<span class="pull-right glyphicon glyphicon-remove" aria-hidden="true" ></span>',
           '</div>',
+          '</template>',
+          '<template id="newProduct">',
+          '<form id="newProductForm">',
+          '<h3>new product</h3>',
+          '<div class= "row">',
+             '<div class="form-group">',
+                '<label for="id" class="control-label col-md-4">ID</label>',
+                '<div class="col-md-7">',
+           '<input class="form-control input-sm " id="id" size="30" maxlength="30" required/>',
+                '</div>',
+             '</div>',
+         '</div>',
+          '<div class= "row">',
+             '<div class="form-group">',
+                '<label for="brand" class="control-label col-md-4">Brand</label>',
+                '<div class="col-md-7">',
+        '<input class="form-control input-sm " id="brand" size="30" maxlength="30" required/>',
+                '</div>',
+             '</div>',
+         '</div>',
+          '<div class= "row">',
+             '<div class="form-group">',
+                '<label for="type" class="control-label col-md-4">Type</label>',
+                '<div class="col-md-7">',
+          '<input class="form-control input-sm " id="type" size="30" maxlength="30" required/>',
+                '</div>',
+             '</div>',
+         '</div>',
+          '<div class= "row">',
+             '<div class="form-group">',
+                '<label for="name" class="control-label col-md-4">Name</label>',
+                '<div class="col-md-7">',
+            '<input class="form-control input-sm " id="name" size="30" maxlength="30" required/>',
+                '</div>',
+             '</div>',
+         '</div>',
+          '<div class= "row">',
+             '<div class="form-group">',
+                '<label for="price" class="control-label col-md-4">Price</label>',
+                '<div class="col-md-7">',
+            '<input class="form-control input-sm " id="price" size="30" maxlength="30" required/>',
+                '</div>',
+             '</div>',
+         '</div>',
+          '<div class= "row">',
+             '<div class="form-group">',
+                '<label for="quantity" class="control-label col-md-4">quantity</label>',
+                '<div class="col-md-7">',
+         '<input class="form-control input-sm " id="quantity" size="30" maxlength="30" />',
+                '</div>',
+             '</div>',
+         '</div>',
+          '<div class= "row">',
+             '<div class="form-group">',
+                '<label for="desc" class="control-label col-md-4">Description</label>',
+                '<div class="col-md-7">',
+         '<textarea class="form-control input-sm " id="desc" size="30" maxlength="30" />',
+                '</div>',
+             '</div>',
+         '</div>',
+         '<div class= "row">',
+             '<div class="form-group">',
+                '<button id="saveNewProductBtn" class="btn btn-success pull-right">Save</button>',
+             '</div>',
+         '</div>',
+          '</form>',
           '</template>'
         ].join("");
 
       _.controllers.parseTemplates(products_temp);
       _.controllers.init(function(){
           _.controllers.productList();
-          $('#searchButton').on('click', function(){
+          $('#searchButton').on('click', function(e){
+                e.preventDefault();
                 _.controllers.productList();
+                _.paging.showPage("products");
+          });
+          $('#newButton').on('click', function(e){
+                e.preventDefault();
+                _.controllers.newProduct(function(){
+                    $('#saveNewProductBtn').on('click', function(e){
+                       e.preventDefault();
+                       if(_.controllers.saveNewProduct()){
+                          _.controllers.productList();
+                          _.paging.showPage("products");
+                       }
+                    });
+                });
+                _.paging.showPage("newProduct");
           });
           $("#searchBy").keyup(function(){
                _.controllers.productList();
+               _.paging.showPage("products");
           });
 
       })
@@ -445,8 +575,7 @@
       $(document).on("click",".volumelist", function(){
           var pid = $(this).data("id");
           _.controllers.productDetails(pid, function(){
-             $("#productDetailsContainer").show();
-             $("#productsContainer").hide();
+             _.paging.showPage("productDetails");
           });
       });
            

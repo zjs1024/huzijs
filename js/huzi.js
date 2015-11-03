@@ -335,15 +335,15 @@
                var parentObj = $input.data("parent");
                var fun = $input.data("getfun");
                var itemid = ($input.data("id") != null) ? $input.data("id") : inputArr[i].id;
-               if(!$.isBlank(parentObj)){
+               if(!this.isBlank(parentObj)){
                  item = this.data[parentObj];
                }else{
                  item = this.data;
                }
              attr = itemid;
              var val= $input.val();  
-               if(!$.isBlank(itemid)){
-                   if(!$.isBlank(fun)){
+               if(!this.isBlank(itemid)){
+                   if(!this.isBlank(fun)){
                       val = eval(fun+"('"+val+"')"); 
                    } 
                    if(inputArr[i].type == 'checkbox'){
@@ -367,9 +367,9 @@
            var $input = $(inputArr[i]);
            var parentObj = $input.data("parent");
            var fun = $input.data("setfun");
-          var itemid = ($input.data("id") != null) ? $input.data("id") : inputArr[i].id;
+           var itemid = ($input.data("id") != null) ? $input.data("id") : inputArr[i].id;
              
-             if(!$.isBlank(parentObj)){
+             if(!this.isBlank(parentObj)){
                item=this.data[parentObj];
              }else{
                item = this.data;
@@ -378,7 +378,7 @@
              var val= item[attr];
              
              if(val != null){ 
-               if(!$.isBlank(fun)){
+               if(!this.isBlank(fun)){
                    val = eval(fun+"('"+val+"')"); 
                }
                if(inputArr[i].type == 'checkbox'){
@@ -436,13 +436,13 @@
          that = this;
          that.isValid = true;
          that.$element.find(":input:visible[required]").each(function(){
-           if(that.isblank($(this).val())){
+           if(that.isBlank($(this).val())){
              $(this).closest(".form-group").addClass("has-error");
              that.isValid = false;
            }else{$(this).closest(".form-group").removeClass("has-error");}
          });
          that.$element.find(":input:visible[data-om-type]").each(function(){
-           if(!that.isblank($(this).val()) &&  $(this).data("om-type")!=null ){            
+           if(!that.isBlank($(this).val()) &&  $(this).data("om-type")!=null ){            
              if($(this).data("om-type") == "email"){
                that.hightlightError($(this), !that.isValidEmail($(this).val()));
              }else if($(this).data("om-type") == "zip"){
@@ -470,7 +470,7 @@
                $ele.siblings(".text-danger").remove();
            }
        },
-       isblank : function(obj){
+       isBlank : function(obj){
             return(!obj || $.trim(obj) === "");
        },
        isValidEmail : function(email) {
