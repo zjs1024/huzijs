@@ -233,7 +233,7 @@
   </li>
 </ul>  
 # Demo
-  <p> A small search engine created with huzi.js: <code>products.html</code></p>
+  <p> A small search engine created with huzi.js: <a href="products.html">products.html</a></p>
 # As a Node.js template engine
 <ul><li>Install in node: <code>npm install huzi</code></li>
     <li>To use as a template engine</h4>
