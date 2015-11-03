@@ -9,7 +9,11 @@
       View   : html5 templates to create views
       Controller: js functions to handle actions.
 
-   2. use "_" as the base object of the app(it is not underscore.js, I used name it page, I just think "_" would be easier to type). "_" object likes the root scope in angularjs, it is a js object to manage the app. It contains Model, Views, Controllers and other functions.
+   2. use "_" as the base object of the app(it is not underscore.js, I used name it page, I just think
+      "_" would be easier to type). "_" object likes the root scope in angularjs, it is a js object to 
+      manage the app. It contains Model,
+      Views, Controllers and other functions.
+
       _.model : define all the data models and can be a init object when create new
       _.controllers: functions that handle the actions
       _.templates: templates dictionary contains all the templates
@@ -107,12 +111,12 @@
 			    /* loading templates from server or localstorage to _.templates dictionary  */
 			    getTemplates : function(callback){
 			                   if(_.store.templates == null){
-			    					$.get(_.utils.urlbase + "templates", function(temp){
-						           	  if(temp != null){
-							           	var m = temp.match(/&lt;template\s+.*?id="([^"]*?)".*?>(.+?)&lt;\/template&gt;/gi);
+			    		 	$.get(_.utils.urlbase + "templates", function(temp){
+						          if(temp != null){
+                                  var m = temp.match(/&lt;template\s+.*?id="([^"]*?)".*?>(.+?)&lt;\/template&gt;/gi);
 							    
 									    for (i in m) {
-									        parts = (/&lt;template\s+.*?id="([^"]*?)".*?>(.+?)&lt;\/template&gt;/gi).exec(m[i]);
+				  parts = (/&lt;template\s+.*?id="([^"]*?)".*?>(.+?)&lt;\/template&gt;/gi).exec(m[i]);
 									        _.templates[parts[1]] = parts[2];
 									    }
 									    _.store[templates] = JSON.stringify(_.templates);
@@ -166,7 +170,7 @@
 						cache:false,
 						error : function(e, x, settings, exception) {
 							if(this.debugMode && e.status >= 400){
-									alert(serviceName + "("+ this.serviceMap[serviceName].fileName + ") error: " 
+				alert(serviceName + "("+ this.serviceMap[serviceName].fileName + ") error: " 
 										 + e.responseJSON.error);
 							}
 							return false;
@@ -182,7 +186,9 @@
 		    }
 		},
 
-		/* Dictionary of all templates. Templates can be stored in html file in the server or js string, and it also can be stored in html5 localstorage, loading as a template dictionary when doing the page init */ 
+		/* Dictionary of all templates. Templates can be stored in html file in the server or js string, 
+		   and it also can be stored in html5 localstorage, loading as a template dictionary when doing 
+		   the page init */ 
 		templates : { 
 		      products_all:"&lt;h4>{{productCategory1}}&lt;/h4>{{repeat products}}{{productName}}:{{productPrice}}{{endrepeat}}",
 		      product_details:"&lt;h4>{{productId}}&lt;/h4>{{productName}}:{{productPrice}}"                 
@@ -202,7 +208,8 @@
 
 // templates.huzi contains all templates
 &lt;template id="products_all"&gt;
-      &lt;h4&gt;&lt;h4&gt;{{productCategory1}}&lt;/h4&gt;{{repeat products}}{{productName}}:{{productPrice}}{{endrepeat}}
+      &lt;h4&gt;&lt;h4&gt;{{productCategory1}}&lt;/h4&gt;{{repeat products}}
+                          {{productName}}:{{productPrice}}{{endrepeat}}
 &lt;/template&gt;
 &lt;template id="product_details"&gt;
       &lt;h4&gt;{{productId}}&lt;/h4&gt;{{productName}}:{{productPrice}}
