@@ -19,7 +19,7 @@
             <div class="panel panel-default">  
                 <div class="panel-heading">
                   <div class="form-group">
-                     <input type="text" class="typeahead form-control input-sm searchCriteria" name="searchCriteria" id="searchCriteria" value="" /> 
+                     <input type="text" class="typeahead form-control input-sm searchCriteria" name="searchBy" id="searchBy" value="" /> 
                       <button type="button" id="searchButton" data-loading-text="Loading..." class="btn btn-success" autocomplete="off">
                          <span class="glyphicon glyphicon-search"></span>
                          Search
@@ -35,10 +35,10 @@
             <div class="panel-heading">
               Products
             </div>
-                <div id="products_list_div" class="panel-body">
+                <div id="productsContainer" class="panel-body">
                     
                 </div><!-- Panel body close -->
-                <div id="product_details_div" class="panel-body volumedetails">
+                <div id="productDetailsContainer" class="panel-body volumedetails">
                     
                 </div><!-- Panel body close -->
              </div><!-- Panel close -->
@@ -52,18 +52,10 @@
         
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="./js/prototype-extends.js"></script>
 <script src="./js/huzi.js"></script>
 <script type='text/javascript'>
-  Date.prototype.usformat=function(){
-    var dd=this.getDate();
-    if(dd<10)dd='0'+dd;
-    var mm=this.getMonth()+1;
-    if(mm<10)mm='0'+mm;
-    var yyyy=this.getFullYear();
-    return String(mm+"\/"+dd+"\/"+yyyy)
-  }
-
-  var _ = { 
+    var _ = { 
       isBlank : function(obj){
             return(!obj || $.trim(obj) === "" || $.trim(obj) === "undefined");
         },
@@ -74,102 +66,126 @@
                     newobj[element] = obj[element];
                 });
             return newobj;
-          }  
-  };
-  //con
-  _.con ={
-      templatesUrl:"templates/templates.huzi",
-      imgurl : "http://placehold.it/300x300",
-      imgurl0 : "http://placehold.it/120x120"
-  }
-  _.profile = {firstName: "Jason",lastName: "Zhang"}
-  _.controllers = {
-      productList : function(){
-         _.services.factory("getAllProducts",{
-                                searchBy: $("#searchCriteria").val()
-                              }, 
-            function(results){
-               _.data.products = results;
-                 var $huzi = $("#products_list_div").data("huzi");
-                 if(_.isBlank($huzi)){
-                   $("#products_list_div").huzi({
+          }, 
+
+          /* profile and login info */  
+        profile : {firstName: "Jason",lastName: "Zhang"},
+        
+        /* html5 localstorage, can be used to store templates, profile and other data in the client side */
+        store : window.localStorage,
+
+      /* global valriable and constants */
+      gvar : {
+            templatesUrl:"templates/templates.huzi",
+            imgurl : "http://placehold.it/300x300",
+            imgurl0 : "http://placehold.it/120x120"
+      },
+        controllers : {
+          productList : function(callback){
+             _.services.factory("getAllProducts", {
+                searchBy: $("#searchBy").val()
+             }, function(results){
+                   _.data.products = results;
+                   var $huzi = $("#productsContainer").data("huzi");
+                   if(_.isBlank($huzi)){
+                     $("#productsContainer").huzi({
                       data:_.data.products,
-                      template: _.templates["products"],
-                      bindingComplete: function(e){
-                        //do something after binding complete.  
-                        console.log(this);
-                      }
-                   })
-               }else{
-                $huzi.rebind(_.data.products);
-               }              
-           })
-      },
-      productDetails : function(pid){
-         _.services.factory("getProductById",{id:pid}, function(results){
-               _.data.product = results;
-               var $huzi = $("#product_details_div").data("huzi");
-               if(_.isBlank($huzi)){
-                $("#product_details_div").huzi({
-                    data: _.data.product,
+                    template: _.templates["products"],
+                    bindingComplete: callback
+                     })
+                 }else{
+                  $huzi.rebind(_.data.products);
+                 }
+             })
+          },
+          productDetails : function(pid, callback){
+             _.services.factory("getProductById",{productId:pid}, function(results){
+                   _.data.product = results;
+                   var $huzi = $("#productDetailsContainer").data("huzi");
+                   if(_.isBlank($huzi)){
+                    $("#productDetailsContainer").huzi({
+                      data:_.data.product,
                     template: _.templates["productDetails"],
-                    bindingComplete: function(e){
-                      //do something after binding complete.  
-                      console.log(this);
+                    bindingComplete: callback
+                      })
+                   }else{
+                    $huzi.rebind(_.data.product);
+                   }                   
+            })
+          },
+          productDetailsClose : function(){
+              $("#productDetailsContainer").hide();
+              $("#productsContainer").show();
+          },
+
+          /* loading templates from server or localstorage to _.templates dictionary  */
+          getTemplates : function(callback){
+                 if(_.store.templates == null){
+                      $.get(_.utils.urlbase + "templates", function(temp){
+                          _.controllers.parseTemplates(temp);
+                          callback();
+                      });
+                 }else{
+                    _.templates = JSON.parse(_.store.templates);
+                    callback();
+                 }
+          },
+          parseTemplates: function(temp){
+              if(temp != null){
+                        var m = temp.match(/<template\s+.*?id="([^"]*?)".*?>(.+?)<\/template>/gi);
+                
+                    for (i in m) {
+                        parts = (/<template\s+.*?id="([^"]*?)".*?>(.+?)<\/template>/gi).exec(m[i]);
+                        _.templates[parts[1]] = parts[2];
                     }
-                  })
-               }else{
-                $huzi.rebind(_.data.product);
-               } 
-               $("#product_details_div").show();
-               $("#products_list_div").hide();
-         })
-      },
-      productDetailsClose : function(){
-           $("#product_details_div").hide();
-           $("#products_list_div").show();
-      },
-      getTemplates: function(temp){
-          if(temp != null){
-              var m = temp.match(/<template\s+.*?id="([^"]*?)".*?>(.+?)<\/template>/gi);         
-              for (i in m) {
-                  parts = (/<template\s+.*?id="([^"]*?)".*?>(.+?)<\/template>/gi).exec(m[i]);
-                  _.templates[parts[1]] = parts[2];
+                    _.store.templates = JSON.stringify(_.templates);
+              }else{
+                return "";
               }
-            }    
+          },
+
+          init: function(callback){
+               // doing init in here
+               _.controllers.getTemplates(callback);
+          }
       },
-      init: function(callafter){
-         //loading tempaltes fille to _.templates
-         $.get(_.utils.urlbase + _.con.templatesUrl, function(temp){
-             _.controllers.getTemplates(temp);      
-         }) 
+
+    /* model define the object structures, can be used when create a new object */
+    models : {
+        product: {
+          "id": "",
+          "brand": "",
+          "type" : "", 
+          "image1" : "",
+          "images": [],
+          "name": "", 
+          "price": 0,
+          "color": [],
+          "quantity" : 5,       
+          "desc": "",
+          "date": new Date().usformat()
       }
-  }
-  _.model = {
-    product: {
-        "id": "",
-        "brand": "",
-        "type" : "", 
-        "image1" : "",
-        "images": [],
-        "name": "", 
-        "price": 0,
-        "color": [],
-        "quantity" : 5,       
-        "desc": "",
-        "date": new Date().usformat()
-    }
-  }
-  _.data = {
-    products: null,
-    product: null
-  }
-  _.services = {
-    urlbase : location.href.substring(0, location.href.lastIndexOf('/') + 1),
-    debugMode : false,
-    isMock: false,
-    factory : function(serviceName, params, callback){
-         if(this.isMock){            
+    },
+
+    /* to store tempary or resuable data */
+    data : {
+      products: null,
+          product: null
+    },
+
+    /* to call web services, get data from the server */ 
+    services : {
+      urlbase : location.href.substring(0, location.href.lastIndexOf('/') + 1),
+
+      /* using mock data */
+      debugMode : true,
+
+      /* mock data for test */
+      isMock : false,
+
+      /* ajax web services calls  */
+      factory : function(serviceName, params, callback){
+           if(this.isMock){            
               var results;
               if(serviceName === "getAllProducts"){
                  var v = params.searchBy;
@@ -183,7 +199,7 @@
                  callback(results);
               }
               if(serviceName === "getProductById"){
-                  var v = params.id;
+                  var v = params.productId;
                   results = $.grep(this.mock.products, function(e){
                               if(e.id === v) return e;
                   });
@@ -195,7 +211,7 @@
             var raw = JSON.stringify(params);
 
             return jQuery.ajax({
-              url:  _.util.urlbase + this.serviceMap[serviceName].url,
+              url:  _.utils.urlbase + this.serviceMap[serviceName].url,
               type: this.serviceMap[serviceName].type,
               data: raw,
               contentType:"application/json",
@@ -212,22 +228,26 @@
                 event.preventDefault();
               }
             });
-         }
+        }
       },
-    serviceMap : {
-        "getAllProducts": {url:"/services/products", type:"get"},
-        "getProductbyId": {url:"/services/product", type:"get"}, //param:{"productId":"12345"}
-        "updateProduct": {url:"/services/product", type:"post"} //param:{"productId":"12345", ...}
-    }
 
+      serviceMap : {
+        "getAllProducts": {fileName:"products.pgm", type:"get"},
+        "getProductbyId": {fileName:"product.pgm", type:"get"}, //param:{"productId":"12345"}
+          "updateProduct": {fileName:"product.pgm", type:"post"}, //param:{"productId":"12345", ...}
+        }
+    },
+
+    /* Dictionary of all templates. Templates can be stored in html file in the server or js string, and it also can be stored in html5 localstorage, loading as a template dictionary when doing the page init */ 
+    templates : { 
+                  
+    }, 
+      
+      /* create utility library */
+      utils :  {
+      urlbase: location.href.substring(0, location.href.lastIndexOf('/') + 1)             
+    } 
   }
-  _.templates = {} 
-    
-    //create our own underscore lib
-  _.utils =  {
-    urlbase: location.href.substring(0, location.href.lastIndexOf('/') + 1)             
-  } 
-
 
   $(function() {
       // add test data
@@ -237,8 +257,8 @@
                 "id": "bb_070915_001",
                 "brand": "Burberry",
                 "type" : "handbag", 
-                "image1" : _.con.imgurl0,
-                "images": [ {url: _.con.imgurl, title:"p1"}, {url: _.con.imgurl,title:"p2"},{url: _.con.imgurl,title:"p3"}],
+                "image1" : _.gvar.imgurl0,
+                "images": [ {url: _.gvar.imgurl, title:"p1"}, {url: _.gvar.imgurl,title:"p2"},{url: _.gvar.imgurl,title:"p3"}],
                 "name": "Canvas check hobo bag", 
                 "price": 795,
                 "color": ["red","blue","white"],
@@ -251,8 +271,8 @@
                 "brand": "Burberry",
                 "type" : "handbag",
                 "name": "Burberry small handbag",
-                "image1" : _.con.imgurl0,
-               "images": [ {url: _.con.imgurl,title:"p4"}, {url: _.con.imgurl,title:"p5"},{url: _.con.imgurl,title:"p6"}],
+                "image1" : _.gvar.imgurl0,
+               "images": [ {url: _.gvar.imgurl,title:"p4"}, {url: _.gvar.imgurl,title:"p5"},{url: _.gvar.imgurl,title:"p6"}],
                 "price": "550",
                 "salePrice": "400",
                 "color": ["red","blue","white"],        
@@ -265,8 +285,8 @@
                 "brand": "Burberry",         
                 "type" : "shoes",
                 "name": "Burberry small handbag",
-                "image1" : _.con.imgurl0,
-                "images": [ {url: _.con.imgurl,title:"p4"}, {url: _.con.imgurl,title:"p5"},{url: _.con.imgurl,title:"p6"}],
+                "image1" : _.gvar.imgurl0,
+                "images": [ {url: _.gvar.imgurl,title:"p4"}, {url: _.gvar.imgurl,title:"p5"},{url: _.gvar.imgurl,title:"p6"}],
                 "price": "550",
                 "color": ["red","blue","white"],  
                 "size" : ["7", "7.5", "8","9","10"],    
@@ -278,8 +298,8 @@
                 "id": "co_070915_004",
                 "brand": "Coach",
                 "type" : "handbag", 
-                "image1" : _.con.imgurl0,
-                "images": [ {url: _.con.imgurl, title:"p1"}, {url: _.con.imgurl,title:"p2"},{url: _.con.imgurl,title:"p3"}],
+                "image1" : _.gvar.imgurl0,
+                "images": [ {url: _.gvar.imgurl, title:"p1"}, {url: _.gvar.imgurl,title:"p2"},{url: _.gvar.imgurl,title:"p3"}],
                 "name": "Canvas check hobo bag", 
                 "price": "795",
                 "color": ["red","blue","white"],
@@ -292,8 +312,8 @@
                 "brand": "Coach",
                 "type" : "handbag",
                 "name": "Coach small handbag",
-                "image1" : _.con.imgurl0,
-                "images": [ {url: _.con.imgurl,title:"p4"}, {url: _.con.imgurl,title:"p5"},{url: _.con.imgurl,title:"p6"}],
+                "image1" : _.gvar.imgurl0,
+                "images": [ {url: _.gvar.imgurl,title:"p4"}, {url: _.gvar.imgurl,title:"p5"},{url: _.gvar.imgurl,title:"p6"}],
                 "price": "550",
                 "color": ["red","blue","white"],        
                  "quantity" : "5",               
@@ -305,8 +325,8 @@
                 "brand": "Coach",         
                 "type" : "shoes",
                 "name": "Coach shoes",
-                "image1" : _.con.imgurl0,
-                "images": [ {url: _.con.imgurl,title:"p4"}, {url: _.con.imgurl,title:"p5"},{url: _.con.imgurl,title:"p6"}],
+                "image1" : _.gvar.imgurl0,
+                "images": [ {url: _.gvar.imgurl,title:"p4"}, {url: _.gvar.imgurl,title:"p5"},{url: _.gvar.imgurl,title:"p6"}],
                 "price": "750",
                 "salePrice":"520",
                 "color": ["red","blue","white"], 
@@ -318,6 +338,7 @@
         ]
     } 
       _.services.isMock = true;
+      _.services.debugMode = true;
 
       var products_temp = [
             '<template id="products">',
@@ -407,87 +428,30 @@
           '</div>',
           '</template>'
         ].join("");
-      $('#searchButton').on('click', function(){
-            _.controllers.productList();
-      });
-      $("#searchCriteria").keyup(function(){
-           _.controllers.productList();
-      });
+
+      _.controllers.parseTemplates(products_temp);
+      _.controllers.init(function(){
+          _.controllers.productList();
+          $('#searchButton').on('click', function(){
+                _.controllers.productList();
+          });
+          $("#searchBy").keyup(function(){
+               _.controllers.productList();
+          });
+
+      })
+      
       
       $(document).on("click",".volumelist", function(){
           var pid = $(this).data("id");
-          _.controllers.productDetails(pid);
+          _.controllers.productDetails(pid, function(){
+             $("#productDetailsContainer").show();
+             $("#productsContainer").hide();
+          });
       });
-      // load templates and create product list after that
-     // _.controllers.init(_.controllers.productList());
-      _.controllers.getTemplates(products_temp);
-      _.controllers.productList();
+           
   })
       
-  
-   /*     var getData = function (){
-            var result = [];
-            var v = $("#searchCriteria").val();
-            if(!$.isBlank(v)){
-              results = $.grep(products, function(e){
-                          if(e.name.toLowerCase().indexOf(v.toLowerCase()) != -1) return e;
-                        });
-            }else{
-              results = products;
-            }
-            return results;
-        };
-        var getDataById = function (id){
-            var result = $.grep(products, function(e){
-                          if(e.id === id) return e;
-                        });
-            
-            return (result.length > 0 ? result[0] : null);
-        };
-        var showResults = function(){
-            if($("#products_list_div").data("huzi") != null){
-                   $("#products_list_div").data("huzi").rebind(getData());
-                 }else{
-                   $("#products_list_div").huzi({
-                      data:products,
-                      template: products_temp
-                   })
-            }
-        }
-        var showDetails = function(pid){
-          var product =getDataById(pid);
-
-           if($("#product_details_div").data("huzi") != null){
-                   $("#product_details_div").data("huzi").rebind(product);
-           }else{
-                   $("#product_details_div").huzi({
-                      data:product,
-                      template: product_details_temp
-                   })
-           }
-           $("#product_details_div").show();
-           $("#products_list_div").hide();
-        }
-        var closeDetails = function(){
-           $("#product_details_div").hide();
-           $("#products_list_div").show();
-        }
-       $(document).ready(function() {
-            $.isBlank = function(obj){
-              return(!obj || $.trim(obj) === "");
-            };
-            $('#searchButton').on('click', function(){
-                 showResults();
-            });
-            $("#searchCriteria").keyup(function(){
-                 showResults();
-            });
-            
-            $(document).on("click",".volumelist", function(){
-                var pid = $(this).data("id");
-                showDetails(pid);
-            });
-        });*/
         </script>
     </body>
 </html>
