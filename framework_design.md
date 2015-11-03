@@ -115,14 +115,14 @@
 						          if(temp != null){
                                   var m = temp.match(/&lt;template\s+.*?id="([^"]*?)".*?>(.+?)&lt;\/template&gt;/gi);
 							    
-									    for (i in m) {
+							for (i in m) {
 				  parts = (/&lt;template\s+.*?id="([^"]*?)".*?>(.+?)&lt;\/template&gt;/gi).exec(m[i]);
-									        _.templates[parts[1]] = parts[2];
-									    }
-									    _.store[templates] = JSON.stringify(_.templates);
-									    callback();
-									  }
-									});
+							        _.templates[parts[1]] = parts[2];
+							 }
+							 _.store[templates] = JSON.stringify(_.templates);
+							  callback();
+							 }
+						 });
 			                   }else{
 			                      _.templates = JSON.parse(_.store[templates]);
 			                      callback();
@@ -189,10 +189,11 @@
 		/* Dictionary of all templates. Templates can be stored in html file in the server or js string, 
 		   and it also can be stored in html5 localstorage, loading as a template dictionary when doing 
 		   the page init */ 
-		templates : { 
-		      products_all:"&lt;h4>{{productCategory1}}&lt;/h4>{{repeat products}}{{productName}}:{{productPrice}}{{endrepeat}}",
-		      product_details:"&lt;h4>{{productId}}&lt;/h4>{{productName}}:{{productPrice}}"                 
-		}, 
+	templates : { 
+	      products_all:"&lt;h4>{{productCategory1}}&lt;/h4>
+	                   {{repeat products}}{{productName}}:{{productPrice}}{{endrepeat}}",
+	      product_details:"&lt;h4>{{productId}}&lt;/h4>{{productName}}:{{productPrice}}"                 
+	}, 
 	    
 	    /* create utility library */
 	    utils :  {
