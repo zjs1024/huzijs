@@ -12,10 +12,10 @@
    <li>some thoughts on js framework design using huzi.js: <a href="framework_design.md"> framework_design.md</a></li>
 </ul>
 # Why another JS template engine
-<p> There are serveral popular JS template engines out there, why naother one? There are several reasons:</p>
+<p> There are serveral popular JS template engines out there, why another one? Why huzijs? There are several reasons:</p>
 <ul>
    <li>Easy for complicate binding logic, you can combine loop and conditional logic whatever you want.</li>
-   <li>lightweight and more natrual JS, it is easy binding to a html or string template, combining with AJAX, it is easy organize and implement single page applications.</li>
+   <li>lightweight and more natrual JS, easy to learn. It can binding to a html or string template, combining with AJAX, it is easy to organize and implement single page applications.</li>
 </ul>
 # JSON data and template
 <ul>
