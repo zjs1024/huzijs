@@ -15,7 +15,7 @@
 <p> There are serveral popular JS template engines out there, why another one? Why huzijs? There are several reasons:</p>
 <ul>
    <li>Easy for complicate binding logic, you can combine loop and conditional logic whatever you want.</li>
-   <li>lightweight and more natrual JS, easy to learn. It can binding to a html or string template, combining with AJAX, it is easy to organize and implement single page applications.</li>
+   <li>Lightweight and more natrual JS, easy to learn. It can binding to a html or string template, combining with AJAX and JSON restful web services, it is easy to organize and implement single page applications.</li>
 </ul>
 # JSON data and template
 <ul>
